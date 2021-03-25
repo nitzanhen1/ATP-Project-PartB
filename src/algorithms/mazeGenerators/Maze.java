@@ -18,23 +18,29 @@ public class Maze {
     }
 
     public void print(){
-        String mazeStr="";
         for(int i=0;i<rowSize;i++){
+            String mazeStr="";
             mazeStr+="{ ";
             for(int j=0;j<columnSize;j++){
                 if(i== startPos.getRowIndex()&& j== startPos.getColumnIndex())
                     mazeStr += "S ";
-                else if(i== goalPos.getRowIndex()&& j== goalPos.getColumnIndex())
+                else if(i== goalPos.getRowIndex()-1&& j== goalPos.getColumnIndex()-1)
                     mazeStr += "E ";
                 else
                     mazeStr+= maze[i][j]+" ";
             }
+            mazeStr+= "}";
+            System.out.println(mazeStr);
         }
-            mazeStr+= "}\n";
-
-        System.out.println(mazeStr);
     }
 
+    public Position getGoalPosition() {
+        return goalPos;
+    }
+
+    public Position getStartPosition() {
+        return startPos;
+    }
 }
 
 
