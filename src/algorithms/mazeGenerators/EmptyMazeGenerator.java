@@ -1,10 +1,10 @@
 package algorithms.mazeGenerators;
 
-public class EmptyMazeGenerator extends AmazeGenerator {
+public class EmptyMazeGenerator extends AMazeGenerator {
 
     @Override
-    public Maze generate(int row, int column) {
+    public Maze generate(int rowSize, int columnSize) {
 
-        return new Maze(row, column);
+        return new Maze(rowSize, columnSize);
     }
 }
