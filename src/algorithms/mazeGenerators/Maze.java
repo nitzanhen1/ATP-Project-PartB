@@ -1,5 +1,5 @@
 package algorithms.mazeGenerators;
-
+import java.util.Random;
 public class Maze {
     private Position startPos;
     private Position goalPos;
@@ -20,8 +20,11 @@ public class Maze {
         this.columnSize = columnSize;
         maze = new int[rowSize][columnSize];
 
-        startPos= new Position(0,0);
-        goalPos= new Position(rowSize-1,columnSize-1);
+        Random rand = new Random();
+
+        //note: requires checking if S and G in the same place
+        startPos= new Position(rand.nextInt(rowSize/2),rand.nextInt(columnSize/2));
+        goalPos= new Position(rand.nextInt(rowSize/2)+rowSize/2,rand.nextInt(columnSize/2)+columnSize/2);
     }
 
     protected void setCell(int row, int column, int val){
@@ -31,17 +34,18 @@ public class Maze {
     }
 
     public void print(){
-        String mazeStr="";
+        String mazeStr;
         for(int i=0;i<rowSize;i++){
             mazeStr="";
             mazeStr+="{ ";
             for(int j=0;j<columnSize;j++){
                 if(i== startPos.getRowIndex()&& j== startPos.getColumnIndex())
-                    mazeStr += "S ";
+                    mazeStr += "S";
                 else if(i== goalPos.getRowIndex()&& j== goalPos.getColumnIndex())
-                    mazeStr += "E ";
+                    mazeStr += "E";
                 else
-                    mazeStr = mazeStr+ maze[i][j]+" ";
+                    mazeStr += maze[i][j];
+                mazeStr+=" ";
             }
             mazeStr+= "}";
             System.out.println(mazeStr);

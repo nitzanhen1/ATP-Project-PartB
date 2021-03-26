@@ -16,10 +16,6 @@ public class SimpleMazeGenerator extends AMazeGenerator {
             }
         }
 
-        //test
-        maze.print();
-        System.out.println("***\n\n***");
-
         int currRow = maze.getStartPosition().getRowIndex();
         int currCol = maze.getStartPosition().getColumnIndex();
         int gRow = maze.getGoalPosition().getRowIndex();
@@ -27,16 +23,16 @@ public class SimpleMazeGenerator extends AMazeGenerator {
 
         maze.setCell(gRow,gCol,0);
 
-        while(currRow != gRow && currCol != gCol){
+        while(currRow != gRow || currCol != gCol){
             maze.setCell(currRow,currCol,0);
             if(currRow-gRow >0)
                 currRow--;
-            else
+            else if(currRow-gRow <0)
                 currRow++;
             maze.setCell(currRow,currCol,0);
             if(currCol-gCol>0)
                 currCol--;
-            else
+            else if(currCol-gCol<0)
                 currCol++;
         }
 
