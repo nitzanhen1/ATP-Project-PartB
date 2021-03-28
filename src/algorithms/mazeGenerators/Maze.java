@@ -33,6 +33,12 @@ public class Maze {
         maze[row][column]=val;
     }
 
+    public int getCell(int row, int column){
+        if(row<0 || row>=rowSize|| column<0 || column>=columnSize)
+            return -1;
+        return maze[row][column];
+    }
+
     public void print(){
         String mazeStr;
         for(int i=0;i<rowSize;i++){
@@ -50,6 +56,29 @@ public class Maze {
             mazeStr+= "}";
             System.out.println(mazeStr);
         }
+    }
+
+
+    public static final char WALL_CHAR = '▓';
+    public String toString(){
+
+        final StringBuffer b = new StringBuffer();
+        for ( int x = 0; x < rowSize ; x++ ){
+            for ( int y = 0; y < columnSize; y++ ){
+                if(x==startPos.getRowIndex()&&y==startPos.getColumnIndex())
+                    b.append("S ");
+                else if(x==goalPos.getRowIndex()&&y==goalPos.getColumnIndex())
+                    b.append("E ");
+                else if(maze[x][y] == 1){
+                    b.append( WALL_CHAR );
+                    b.append( WALL_CHAR );
+                }
+                else
+                    b.append("  ");
+            }
+            b.append( '\n' );
+        }
+        return b.toString();
     }
 
 
