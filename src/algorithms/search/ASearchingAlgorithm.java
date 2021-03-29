@@ -1,19 +1,28 @@
 package algorithms.search;
 
+import java.util.PriorityQueue;
+
 public abstract class ASearchingAlgorithm implements ISearchingAlgorithm{
+    protected PriorityQueue<AState> openList;
+    protected int evaluated;
+
+    public ASearchingAlgorithm() {
+        openList = new PriorityQueue<AState>();
+        evaluated=0;
+    }
+    public AState pop(){
+        evaluated++;
+        return openList.poll();
+    }
+
     @Override
     public Solution solve(ISearchable domain) {
         return null;
     }
 
     @Override
-    public Solution search(ISearchable domain) {
-        return null;
-    }
-
-    @Override
     public int getNumberOfNodesEvaluated() {
-        return 0;
+        return evaluated;
     }
 
     @Override
@@ -24,7 +33,7 @@ public abstract class ASearchingAlgorithm implements ISearchingAlgorithm{
     @Override
     public long measureAlgorithmTimeMillis(ISearchable domain) {
         long t1 = System.currentTimeMillis();
-        this.search(domain);
+        this.solve(domain);
         long t2 = System.currentTimeMillis();
         return t2-t1;
     }
