@@ -12,7 +12,7 @@ public abstract class ASearchingAlgorithm implements ISearchingAlgorithm{
     }
 
     @Override
-    public int getNumberOfNumbersEvaluated() {
+    public int getNumberOfNodesEvaluated() {
         return 0;
     }
 
