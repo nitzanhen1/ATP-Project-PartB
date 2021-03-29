@@ -11,15 +11,12 @@ public class MyMazeGenerator extends AMazeGenerator {
             for (int j=0;j<columnSize; j++)
                 maze.setCell(i,j,1);
         }
-        /*too long, maybe need set position*/
-        maze.setCell(maze.getStartPosition().getRowIndex(),maze.getStartPosition().getColumnIndex(),0);
-        maze.setCell(maze.getGoalPosition().getRowIndex(),maze.getGoalPosition().getColumnIndex(),0);
 
         LinkedList<int[]> passages = new LinkedList<>();
         Random rand = new Random();
-        //random start or start point?
-        int x = rand.nextInt(rowSize);
-        int y = rand.nextInt(columnSize);
+
+        int x = maze.getStartPosition().getRowIndex();
+        int y = maze.getStartPosition().getColumnIndex();
         passages.add(new int[]{x,y,x,y});
 
         while ( !passages.isEmpty() ){
@@ -30,16 +27,26 @@ public class MyMazeGenerator extends AMazeGenerator {
             {
                 maze.setCell(nextPath[0],nextPath[1],0);
                 maze.setCell(x,y,0);
-                if ( x >= 2 && maze.getCell(x-2,y) == 1 )
+                if (maze.getCell(x-2,y) == 1 )
                     passages.add( new int[]{x-1,y,x-2,y} );
-                if ( y >= 2 && maze.getCell(x,y-2) == 1 )
+                if (maze.getCell(x,y-2) == 1 )
                     passages.add( new int[]{x,y-1,x,y-2} );
-                if ( x < rowSize-2 && maze.getCell(x+2,y) == 1 )
+                if (maze.getCell(x+2,y) == 1 )
                     passages.add( new int[]{x+1,y,x+2,y} );
-                if ( y < columnSize-2 && maze.getCell(x,y+2) == 1 )
+                if (maze.getCell(x,y+2) == 1 )
                     passages.add( new int[]{x,y+1,x,y+2} );
             }
         }
+
+        x = maze.getGoalPosition().getRowIndex();
+        y = maze.getGoalPosition().getColumnIndex();
+        if(maze.getCell(x,y)==1) {
+            maze.setCell(x, y, 0);
+            if(maze.getCell(x-1,y) != 0 && maze.getCell(x+1,y) != 0 && maze.getCell(x,y-1) != 0 && maze.getCell(x,y+1) != 0)
+                maze.setCell(x-1, y, 0);
+        }
+
+
         return maze;
     }
 }
