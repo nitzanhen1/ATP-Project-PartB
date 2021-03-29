@@ -7,11 +7,12 @@ public class MazeState extends AState {
 
     public MazeState(String state, AState parentState, double cost) {
         super(state, parentState, cost);
-        pos=new Position(state.charAt(1),state.charAt(3));
+        pos=new Position(Character.getNumericValue(state.charAt(1)),Character.getNumericValue(state.charAt(3)));
     }
 
     public MazeState(Position pos) {
         super(pos.toString());
+        this.pos=pos;
     }
 
 }

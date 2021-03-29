@@ -30,8 +30,8 @@ public class SearchableMaze implements ISearchable {
     public ArrayList<AState> getAllPossibleStates(AState state) {
         String currPos = state.getState();
         ArrayList<AState> successors= new ArrayList<AState>();
-        int row = currPos.charAt(1);
-        int col = currPos.charAt(3);
+        int row = Character.getNumericValue(currPos.charAt(1));
+        int col = Character.getNumericValue(currPos.charAt(3));
 
 
         boolean up = checkSuccessors(row-1,col,state,successors,10);
@@ -53,7 +53,7 @@ public class SearchableMaze implements ISearchable {
     public boolean checkSuccessors(int row, int col, AState state, ArrayList<AState> successors,double cost){
         if(sMaze.getCell(row,col)==0) {
             Position pos = new Position(row,col);
-            successors.add(new MazeState(pos.toString(),state,cost));
+            successors.add(0,new MazeState(pos.toString(),state,cost));
             return true;
         }
         return false;
