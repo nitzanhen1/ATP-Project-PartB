@@ -1,4 +1,5 @@
 package algorithms.search;
 
-public class BreadthFirstSearch {
+public class BreadthFirstSearch extends ASearchingAlgorithm{
+
 }
