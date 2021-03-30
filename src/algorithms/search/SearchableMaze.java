@@ -19,10 +19,11 @@ public class SearchableMaze implements ISearchable {
         stateMaze = new AState[row][col];
         int sRow=maze.getStartPosition().getRowIndex();
         int sCol=maze.getStartPosition().getColumnIndex();
-        stateMaze[sRow][sCol] = new MazeState(maze.getStartPosition());
+        stateMaze[sRow][sCol] = new MazeState(maze.getStartPosition().toString());
         startState = stateMaze[sRow][sCol];
 
-        goalState = new MazeState(sMaze.getGoalPosition());
+        goalState = new MazeState(sMaze.getGoalPosition().toString());
+
     }
 
     @Override
@@ -40,9 +41,10 @@ public class SearchableMaze implements ISearchable {
     public ArrayList<AState> getAllPossibleStates(AState state) {
         String currPos = state.getState();
         ArrayList<AState> successors= new ArrayList<AState>();
-        int row = Character.getNumericValue(currPos.charAt(1));
-        int col = Character.getNumericValue(currPos.charAt(3));
 
+        int i = currPos.indexOf(",");
+        int row = Integer.valueOf(currPos.substring(1,i));
+        int col = Integer.valueOf(currPos.substring(i+1,currPos.length()-1));
 
         boolean up = checkSuccessors(row-1,col,state,successors,10);
         boolean left= checkSuccessors(row,col-1,state,successors,10);

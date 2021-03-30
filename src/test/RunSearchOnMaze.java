@@ -7,8 +7,10 @@ package test;
 
 public class RunSearchOnMaze {
     public static void main(String[] args) {
+
+
         IMazeGenerator mg = new MyMazeGenerator();
-        Maze maze = mg.generate(10, 10);
+        Maze maze = mg.generate(20, 20);
         System.out.println(maze.toString());
         SearchableMaze searchableMaze = new SearchableMaze(maze);
         solveProblem(searchableMaze, new BreadthFirstSearch());

@@ -36,6 +36,14 @@ public abstract class AState implements Comparable<AState> {
         return cost;
     }
 
+    public void setParentState(AState parentState) {
+        this.parentState = parentState;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
     public boolean isVisited() {
         return visited;
     }
