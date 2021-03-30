@@ -66,7 +66,7 @@ public class SearchableMaze implements ISearchable {
         if(sMaze.getCell(row,col)==0) {
             Position pos = new Position(row,col);
             if(stateMaze[row][col]==null)
-                stateMaze[row][col]=new MazeState(pos.toString(),state,cost);
+                stateMaze[row][col]=new MazeState(pos.toString(),state,cost+state.getCost());
 
             successors.add(0,stateMaze[row][col]);
             return true;
