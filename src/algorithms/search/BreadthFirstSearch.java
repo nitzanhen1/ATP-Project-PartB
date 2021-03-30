@@ -1,17 +1,28 @@
 package algorithms.search;
 
 import java.util.ArrayList;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class BreadthFirstSearch extends ASearchingAlgorithm{
 
+    protected Queue<AState> openList;
+
+
     public BreadthFirstSearch() {
         super();
+        openList = new LinkedList<AState>();
+        evaluated=0;
+    }
+
+    public AState pop(){
+        evaluated++;
+        return openList.poll();
     }
 
     @Override
     public Solution solve(ISearchable domain) {
-        Solution solution= new Solution();
+        domain.resetSearchable();
         AState start = domain.getStartState();
         AState goal = domain.getGoalState();
         openList.add(start);
@@ -22,27 +33,19 @@ public class BreadthFirstSearch extends ASearchingAlgorithm{
 
         while (openList.size()>0){
             currState = this.pop();
-            neighbors=domain.getAllPossibleStates(currState);
+            neighbors=domain.getAllSuccessors(currState);
             for (AState s:neighbors) {
                 if(!s.isVisited()){
                     openList.add(s);
                     s.setVisited(true);
 
                     if(s.equals(goal))
-                    {
-                        currState = s;
+                        return  returnPath(start,s);
 
-                        while(!(currState.equals(start))) {
-                            solution.addSolutionPath(currState);
-                            currState=currState.getParentState();
-                        }
-                        solution.addSolutionPath(currState);
-                        return solution;
-                    }
                 }
             }
         }
-        return solution;
+        return null;
     }
 
     @Override

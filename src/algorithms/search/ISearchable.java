@@ -5,5 +5,6 @@ import java.util.ArrayList;
 public interface ISearchable {
     AState getStartState();
     AState getGoalState();
-    ArrayList<AState> getAllPossibleStates(AState state);
+    ArrayList<AState> getAllSuccessors(AState state);
+    void resetSearchable();
 }

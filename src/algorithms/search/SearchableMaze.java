@@ -38,7 +38,7 @@ public class SearchableMaze implements ISearchable {
     }
 
     @Override
-    public ArrayList<AState> getAllPossibleStates(AState state) {
+    public ArrayList<AState> getAllSuccessors(AState state) {
         String currPos = state.getState();
         ArrayList<AState> successors= new ArrayList<AState>();
 
@@ -72,5 +72,21 @@ public class SearchableMaze implements ISearchable {
             return true;
         }
         return false;
+    }
+
+    public void resetSearchable(){
+        for(int i = 0;i<sMaze.getRowSize(); i++){
+            for(int j = 0; j< sMaze.getColumnSize();j++){
+                if (stateMaze[i][j] != null) {
+                    if(stateMaze[i][j].equals(startState)){
+                        stateMaze[i][j].setParentState(null);
+                        stateMaze[i][j].setCost(0);
+                        stateMaze[i][j].setVisited(false);
+                    }
+                    else
+                        stateMaze[i][j]=null;
+                }
+            }
+        }
     }
 }
