@@ -10,10 +10,11 @@ public class RunSearchOnMaze {
         IMazeGenerator mg = new MyMazeGenerator();
         Maze maze = mg.generate(10, 10);
         System.out.println(maze.toString());
+
         SearchableMaze searchableMaze = new SearchableMaze(maze);
         solveProblem(searchableMaze, new BestFirstSearch());
-        solveProblem(searchableMaze, new BreadthFirstSearch());
-        solveProblem(searchableMaze, new DepthFirstSearch());
+        //solveProblem(searchableMaze, new BreadthFirstSearch());
+        //solveProblem(searchableMaze, new DepthFirstSearch());
 
 
     }
