@@ -11,9 +11,11 @@ public class BreadthFirstSearch extends ASearchingAlgorithm{
 
     @Override
     public Solution solve(ISearchable domain) {
-        Solution solution= new Solution();;
+        Solution solution= new Solution();
         openList.add(domain.getStartState());
         domain.getStartState().setVisited(true);
+
+
 
         while (openList.size()>0){
             AState currState = this.pop();
@@ -22,11 +24,14 @@ public class BreadthFirstSearch extends ASearchingAlgorithm{
                 if(!s.isVisited()){
                     openList.add(s);
                     s.setVisited(true);
+
+                    System.out.println(openList.toString());
+                    System.out.println("***");
                     if(s.equals(domain.getGoalState()))
                     {
                         currState = s;
                         while(!(currState.equals(domain.getStartState()))) {
-                            System.out.println(currState.toString());
+                            //System.out.println(currState.toString());
                             solution.addSolutionPath(currState);
                             currState=currState.getParentState();
                         }
@@ -36,7 +41,7 @@ public class BreadthFirstSearch extends ASearchingAlgorithm{
                 }
             }
         }
-        return null;
+        return solution;
     }
 
     @Override

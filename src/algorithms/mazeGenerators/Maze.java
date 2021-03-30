@@ -58,6 +58,13 @@ public class Maze {
         }
     }
 
+    public int getRowSize() {
+        return rowSize;
+    }
+
+    public int getColumnSize() {
+        return columnSize;
+    }
 
     public static final char WALL_CHAR = '▓';
     public String toString(){

@@ -15,35 +15,35 @@ public class MyMazeGenerator extends AMazeGenerator {
         LinkedList<int[]> passages = new LinkedList<>();
         Random rand = new Random();
 
-        int x = maze.getStartPosition().getRowIndex();
-        int y = maze.getStartPosition().getColumnIndex();
-        passages.add(new int[]{x,y,x,y});
+        int row = maze.getStartPosition().getRowIndex();
+        int col = maze.getStartPosition().getColumnIndex();
+        passages.add(new int[]{row,col,row,col});
 
         while ( !passages.isEmpty() ){
             int[] nextPath = passages.remove( rand.nextInt( passages.size() ) );
-            x = nextPath[2];
-            y = nextPath[3];
-            if ( maze.getCell(x,y) == 1 )
+            row = nextPath[2];
+            col = nextPath[3];
+            if ( maze.getCell(row,col) == 1 )
             {
                 maze.setCell(nextPath[0],nextPath[1],0);
-                maze.setCell(x,y,0);
-                if (maze.getCell(x-2,y) == 1 )
-                    passages.add( new int[]{x-1,y,x-2,y} );
-                if (maze.getCell(x,y-2) == 1 )
-                    passages.add( new int[]{x,y-1,x,y-2} );
-                if (maze.getCell(x+2,y) == 1 )
-                    passages.add( new int[]{x+1,y,x+2,y} );
-                if (maze.getCell(x,y+2) == 1 )
-                    passages.add( new int[]{x,y+1,x,y+2} );
+                maze.setCell(row,col,0);
+                if (maze.getCell(row-2,col) == 1 )
+                    passages.add( new int[]{row-1,col,row-2,col} );
+                if (maze.getCell(row,col-2) == 1 )
+                    passages.add( new int[]{row,col-1,row,col-2} );
+                if (maze.getCell(row+2,col) == 1 )
+                    passages.add( new int[]{row+1,col,row+2,col} );
+                if (maze.getCell(row,col+2) == 1 )
+                    passages.add( new int[]{row,col+1,row,col+2} );
             }
         }
 
-        x = maze.getGoalPosition().getRowIndex();
-        y = maze.getGoalPosition().getColumnIndex();
-        if(maze.getCell(x,y)==1) {
-            maze.setCell(x, y, 0);
-            if(maze.getCell(x-1,y) != 0 && maze.getCell(x+1,y) != 0 && maze.getCell(x,y-1) != 0 && maze.getCell(x,y+1) != 0)
-                maze.setCell(x-1, y, 0);
+        row = maze.getGoalPosition().getRowIndex();
+        col = maze.getGoalPosition().getColumnIndex();
+        if(maze.getCell(row,col)==1) {
+            maze.setCell(row, col, 0);
+            if(maze.getCell(row-1,col) != 0 && maze.getCell(row+1,col) != 0 && maze.getCell(row,col-1) != 0 && maze.getCell(row,col+1) != 0)
+                maze.setCell(row-1,col, 0);
         }
 
 

@@ -1,13 +1,15 @@
 package algorithms.search;
 
+import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 public abstract class ASearchingAlgorithm implements ISearchingAlgorithm{
-    protected PriorityQueue<AState> openList;
+    protected Queue<AState> openList;
     protected int evaluated;
 
     public ASearchingAlgorithm() {
-        openList = new PriorityQueue<AState>();
+        openList = new LinkedList<AState>();
         evaluated=0;
     }
     public AState pop(){
