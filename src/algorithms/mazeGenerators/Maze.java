@@ -22,7 +22,6 @@ public class Maze {
 
         Random rand = new Random();
 
-        //note: requires checking if S and G in the same place
         startPos= new Position(rand.nextInt(rowSize/2),0);
         goalPos= new Position(rand.nextInt(rowSize/2)+rowSize/2,columnSize-1);
     }
