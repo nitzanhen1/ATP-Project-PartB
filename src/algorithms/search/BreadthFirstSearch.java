@@ -23,6 +23,8 @@ public class BreadthFirstSearch extends ASearchingAlgorithm{
     @Override
     public Solution solve(ISearchable domain) {
         domain.resetSearchable();
+        openList.clear();
+        evaluated=0;
         AState start = domain.getStartState();
         AState goal = domain.getGoalState();
         openList.add(start);

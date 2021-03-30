@@ -20,6 +20,8 @@ public class DepthFirstSearch extends ASearchingAlgorithm{
     @Override
     public Solution solve(ISearchable domain) {
         domain.resetSearchable();
+        openList.clear();
+        evaluated=0;
         AState start = domain.getStartState();
         AState goal = domain.getGoalState();
         AState currState;
@@ -33,10 +35,11 @@ public class DepthFirstSearch extends ASearchingAlgorithm{
                 currState.setVisited(true);
                 neighbors=domain.getAllSuccessors(currState);
                 for (AState s:neighbors){
-                    openList.push(s);
-
-                    if(s.equals(goal))
-                        return  returnPath(start,s);
+                    if(!s.isVisited()&&!openList.contains(s)) {
+                        openList.push(s);
+                        if (s.equals(goal))
+                            return returnPath(start, s);
+                    }
                 }
             }
         }

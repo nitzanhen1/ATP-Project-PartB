@@ -7,8 +7,8 @@ public class RunSearchOnMaze {
     public static void main(String[] args) {
 
 
-        IMazeGenerator mg = new EmptyMazeGenerator();
-        Maze maze = mg.generate(5, 5);
+        IMazeGenerator mg = new MyMazeGenerator();
+        Maze maze = mg.generate(10, 10);
         System.out.println(maze.toString());
         SearchableMaze searchableMaze = new SearchableMaze(maze);
         solveProblem(searchableMaze, new BestFirstSearch());
