@@ -89,4 +89,28 @@ public class Maze3D {
     public int getColumnSize() {
         return columnSize;
     }
+
+    public static final char WALL_CHAR = '▓';
+    public String toString(){
+
+        final StringBuffer b = new StringBuffer();
+        for(int z = 0; z < depthSize ; z++) {
+            for (int x = 0; x < rowSize; x++) {
+                for (int y = 0; y < columnSize; y++) {
+                    if (z == startPos.getDepthIndex() && x == startPos.getRowIndex() && y == startPos.getColumnIndex())
+                        b.append("S ");
+                    else if (z == goalPos.getDepthIndex() && x == goalPos.getRowIndex() && y == goalPos.getColumnIndex())
+                        b.append("E ");
+                    else if (maze[z][x][y] == 1) {
+                        b.append(WALL_CHAR);
+                        b.append(WALL_CHAR);
+                    } else
+                        b.append("  ");
+                }
+                b.append('\n');
+            }
+            b.append("---------------\n");
+        }
+        return b.toString();
+    }
 }

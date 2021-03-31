@@ -18,9 +18,10 @@ public class MyMazeGenerator extends AMazeGenerator {
         int row = maze.getStartPosition().getRowIndex();
         int col = maze.getStartPosition().getColumnIndex();
         passages.add(new int[]{row,col,row,col});
+        int[] nextPath;
 
         while ( !passages.isEmpty() ){
-            int[] nextPath = passages.remove( rand.nextInt( passages.size() ) );
+            nextPath = passages.remove( rand.nextInt( passages.size() ) );
             row = nextPath[2];
             col = nextPath[3];
             if ( maze.getCell(row,col) == 1 )

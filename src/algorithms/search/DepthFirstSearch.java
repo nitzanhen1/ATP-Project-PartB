@@ -1,7 +1,6 @@
 package algorithms.search;
 
-import java.util.ArrayList;
-import java.util.Stack;
+import java.util.*;
 
 public class DepthFirstSearch extends ASearchingAlgorithm{
 
@@ -26,17 +25,24 @@ public class DepthFirstSearch extends ASearchingAlgorithm{
         AState goal = domain.getGoalState();
         AState currState;
         ArrayList<AState> neighbors;
-
+        HashSet<AState> visited= new HashSet<>();
+        HashSet<AState> openListHelper= new HashSet<>();
 
         openList.push(start);
+        openListHelper.add(start);
+
         while (openList.size()>0){
             currState = this.pop();
-            if(!currState.isVisited()) {
-                currState.setVisited(true);
+            openListHelper.remove(currState);
+
+            if(!visited.contains(currState)) {
+                visited.add(currState);
                 neighbors=domain.getAllSuccessors(currState);
                 for (AState s:neighbors){
-                    if(!s.isVisited()&&!openList.contains(s)) {
+                    if(!visited.contains(s)&&!openListHelper.contains(s)) {
                         openList.push(s);
+                        openListHelper.add(s);
+
                         if (s.equals(goal))
                             return returnPath(start, s);
                     }

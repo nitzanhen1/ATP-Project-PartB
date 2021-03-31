@@ -1,6 +1,7 @@
 package algorithms.search;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -20,15 +21,16 @@ public class BreadthFirstSearch extends ASearchingAlgorithm{
         return openList.poll();
     }
 
-    @Override
     public Solution solve(ISearchable domain) {
         domain.resetSearchable();
         openList.clear();
         evaluated=0;
         AState start = domain.getStartState();
         AState goal = domain.getGoalState();
+
+        HashSet<AState> visited = new HashSet<>();
         openList.add(start);
-        start.setVisited(true);
+        visited.add(start);
 
         AState currState;
         ArrayList<AState> neighbors;
@@ -37,13 +39,12 @@ public class BreadthFirstSearch extends ASearchingAlgorithm{
             currState = this.pop();
             neighbors=domain.getAllSuccessors(currState);
             for (AState s:neighbors) {
-                if(!s.isVisited()){
+                if(!visited.contains(s)){
                     openList.add(s);
-                    s.setVisited(true);
+                    visited.add(s);
 
                     if(s.equals(goal))
                         return  returnPath(start,s);
-
                 }
             }
         }

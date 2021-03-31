@@ -6,23 +6,24 @@ import java.util.ArrayList;
 
 public class SearchableMaze implements ISearchable {
 
-    private Maze sMaze;
-    private AState[][] stateMaze;
-    private AState startState;
-    private AState goalState;
+    private Maze maze;
+    private MazeState[][] stateMaze;
+    private MazeState startState;
+    private MazeState goalState;
 
     public SearchableMaze(Maze maze) {
 
-        sMaze = maze;
+        this.maze = maze;
         int row = maze.getRowSize();
         int col = maze.getColumnSize();
-        stateMaze = new AState[row][col];
-        int sRow=maze.getStartPosition().getRowIndex();
-        int sCol=maze.getStartPosition().getColumnIndex();
-        stateMaze[sRow][sCol] = new MazeState(maze.getStartPosition().toString());
-        startState = stateMaze[sRow][sCol];
+        stateMaze = new MazeState[row][col];
 
-        goalState = new MazeState(sMaze.getGoalPosition().toString());
+        startState = new MazeState(maze.getStartPosition());
+        int sRow= startState.getRowIndex();
+        int sCol=startState.getColumnIndex();
+        stateMaze[sRow][sCol] = startState;
+
+        goalState = new MazeState(maze.getGoalPosition());
 
     }
 
@@ -39,12 +40,12 @@ public class SearchableMaze implements ISearchable {
 
     @Override
     public ArrayList<AState> getAllSuccessors(AState state) {
-        String currPos = state.getState();
         ArrayList<AState> successors= new ArrayList<AState>();
 
-        int i = currPos.indexOf(",");
-        int row = Integer.valueOf(currPos.substring(1,i));
-        int col = Integer.valueOf(currPos.substring(i+1,currPos.length()-1));
+        MazeState mState = new MazeState(state.getState());
+
+        int row = mState.getRowIndex();
+        int col = mState.getColumnIndex();
 
         boolean up = checkSuccessors(row-1,col,state,successors,10);
         boolean left= checkSuccessors(row,col-1,state,successors,10);
@@ -62,11 +63,10 @@ public class SearchableMaze implements ISearchable {
         return successors;
     }
 
-    public boolean checkSuccessors(int row, int col, AState state, ArrayList<AState> successors,double cost){
-        if(sMaze.getCell(row,col)==0) {
-            Position pos = new Position(row,col);
+    public boolean checkSuccessors(int row, int col, AState parentState, ArrayList<AState> successors,double cost){
+        if(maze.getCell(row,col)==0) {
             if(stateMaze[row][col]==null)
-                stateMaze[row][col]=new MazeState(pos.toString(),state,cost+state.getCost());
+                stateMaze[row][col]=new MazeState(new Position(row,col),parentState,cost+parentState.getCost());
 
             successors.add(0,stateMaze[row][col]);
             return true;
@@ -75,13 +75,11 @@ public class SearchableMaze implements ISearchable {
     }
 
     public void resetSearchable(){
-        for(int i = 0;i<sMaze.getRowSize(); i++){
-            for(int j = 0; j< sMaze.getColumnSize();j++){
+        for(int i = 0;i<maze.getRowSize(); i++){
+            for(int j = 0; j< maze.getColumnSize();j++){
                 if (stateMaze[i][j] != null) {
                     if(stateMaze[i][j].equals(startState)){
-                        stateMaze[i][j].setParentState(null);
-                        stateMaze[i][j].setCost(0);
-                        stateMaze[i][j].setVisited(false);
+                        stateMaze[i][j].reset();
                     }
                     else
                         stateMaze[i][j]=null;
