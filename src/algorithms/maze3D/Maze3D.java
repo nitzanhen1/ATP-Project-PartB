@@ -12,6 +12,20 @@ public class Maze3D {
     private int rowSize;
     private int columnSize;
 
+
+    public Maze3D(int depthSize, int rowSize, int columnSize) {
+        if(depthSize<2 || rowSize<2 || columnSize<2)
+            throw new IllegalArgumentException("min size of maze is 2x2x2");
+        this.depthSize = depthSize;
+        this.rowSize = rowSize;
+        this.columnSize = columnSize;
+        maze = new int[depthSize][rowSize][columnSize];
+
+        Random rand = new Random();
+        startPos =  new Position3D(rand.nextInt(depthSize),rand.nextInt(rowSize),0);
+        goalPos =  new Position3D(rand.nextInt(depthSize),rand.nextInt(rowSize),columnSize-1);
+    }
+
     public int[][][] getMap(){
         return maze;
     }
@@ -22,17 +36,6 @@ public class Maze3D {
 
     public Position3D getGoalPosition() {
         return goalPos;
-    }
-
-    public Maze3D(int depthSize, int rowSize, int columnSize) {
-        this.depthSize = depthSize;
-        this.rowSize = rowSize;
-        this.columnSize = columnSize;
-        maze = new int[depthSize][rowSize][columnSize];
-
-        Random rand = new Random();
-        startPos =  new Position3D(rand.nextInt(depthSize),rand.nextInt(rowSize),0);
-        goalPos =  new Position3D(rand.nextInt(depthSize),rand.nextInt(rowSize),columnSize-1);
     }
 
     public void print(){

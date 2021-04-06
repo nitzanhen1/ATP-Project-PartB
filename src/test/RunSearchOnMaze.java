@@ -8,8 +8,8 @@ public class RunSearchOnMaze {
 
 
         IMazeGenerator mg = new MyMazeGenerator();
-        Maze maze = mg.generate(1000, 1000);
-        //System.out.println(maze.toString());
+        Maze maze = mg.generate(2, 2);
+        System.out.println(maze.toString());
 
         SearchableMaze searchableMaze = new SearchableMaze(maze);
         solveProblem(searchableMaze, new BestFirstSearch());
@@ -27,7 +27,7 @@ public class RunSearchOnMaze {
 //Printing Solution Path
                 System.out.println("Solution path:");
         ArrayList<AState> solutionPath = solution.getSolutionPath();
-        //System.out.println(solutionPath.toString());
+        System.out.println(solutionPath.toString());
         /*for (int i = 0; i < solutionPath.size(); i++) {
             System.out.println(String.format("%s. %s",i,solutionPath.get(i)));
         }*/

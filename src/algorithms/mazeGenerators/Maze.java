@@ -16,6 +16,8 @@ public class Maze {
     }
 
     public Maze(int rowSize, int columnSize) {
+        if(rowSize<2 || columnSize<2)
+            throw new IllegalArgumentException("min size of maze is 2x2");
         this.rowSize = rowSize;
         this.columnSize = columnSize;
         maze = new int[rowSize][columnSize];

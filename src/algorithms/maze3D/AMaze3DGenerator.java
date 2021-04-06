@@ -10,4 +10,12 @@ public abstract class AMaze3DGenerator implements IMaze3DGenerator{
         return t2-t1;
     }
 
+    @Override
+    public long measure2(int depthSize, int rowSize, int columnSize){
+        long t1 = System.currentTimeMillis();
+        this.generate2(depthSize,rowSize,columnSize);
+        long t2 = System.currentTimeMillis();
+        return t2-t1;
+    }
+
 }
