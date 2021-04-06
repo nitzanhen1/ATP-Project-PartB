@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class SearchableMaze3D implements ISearchable {
 
     private Maze3D maze;
-    private Maze3DState[][][] stateMaze;
+    //private Maze3DState[][][] stateMaze;
     private Maze3DState startState;
     private Maze3DState goalState;
 
@@ -21,13 +21,13 @@ public class SearchableMaze3D implements ISearchable {
         int depth = maze.getDepthSize();
         int row = maze.getRowSize();
         int col = maze.getColumnSize();
-        stateMaze = new Maze3DState[depth][row][col];
+        //stateMaze = new Maze3DState[depth][row][col];
 
         startState = new Maze3DState(maze.getStartPosition());
         int sDepth= startState.getDepthIndex();
         int sRow= startState.getRowIndex();
         int sCol=startState.getColumnIndex();
-        stateMaze[sDepth][sRow][sCol] = startState;
+        //stateMaze[sDepth][sRow][sCol] = startState;
 
         goalState = new Maze3DState(maze.getGoalPosition());
 
@@ -67,17 +67,18 @@ public class SearchableMaze3D implements ISearchable {
 
     public boolean checkSuccessors(int depth, int row, int col, AState parentState, ArrayList<AState> successors,double cost){
         if(maze.getCell(depth,row,col)==0) {
-            if(stateMaze[depth][row][col]==null)
+            Maze3DState mState = new Maze3DState(new Position3D(depth,row,col),parentState,cost+parentState.getCost());
+            /*if(stateMaze[depth][row][col]==null)
                 stateMaze[depth][row][col]=new Maze3DState(new Position3D(depth,row,col),parentState,cost+parentState.getCost());
-
-            successors.add(0,stateMaze[depth][row][col]);
+*/
+            successors.add(0,mState);
             return true;
         }
         return false;
     }
 
     public void resetSearchable(){
-        for(int i = 0;i<maze.getDepthSize(); i++){
+        /*for(int i = 0;i<maze.getDepthSize(); i++){
             for(int j = 0; j< maze.getRowSize();j++){
                 for(int k = 0;k < maze.getColumnSize();k++) {
                     if (stateMaze[i][j][k] != null) {
@@ -87,9 +88,9 @@ public class SearchableMaze3D implements ISearchable {
                             stateMaze[i][j][k] = null;
                     }
                 }
-            }
+            }*/
         }
     }
 
 
-}
+

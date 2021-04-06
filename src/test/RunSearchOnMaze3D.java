@@ -13,12 +13,12 @@ public class RunSearchOnMaze3D {
         solveProblem(searchableMaze3D, new DepthFirstSearch());
         solveProblem(searchableMaze3D, new BestFirstSearch());*/
 
-        Maze3D maze2 = mg.generate2(500, 500, 500);
+        Maze3D maze2 = mg.generate2(300, 300, 300);
         //System.out.println(maze.toString());
         SearchableMaze3D searchableMaze3D2 = new SearchableMaze3D(maze2);
         solveProblem(searchableMaze3D2, new BreadthFirstSearch());
-        solveProblem(searchableMaze3D2, new DepthFirstSearch());
-        solveProblem(searchableMaze3D2, new BestFirstSearch());
+        //solveProblem(searchableMaze3D2, new DepthFirstSearch());
+        //solveProblem(searchableMaze3D2, new BestFirstSearch());
 
         //System.out.println(String.format("Start Position: %s", maze.getStartPosition())); // format "{row,column}"
         // prints the maze exit position

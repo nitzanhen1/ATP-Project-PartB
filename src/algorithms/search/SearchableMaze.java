@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class SearchableMaze implements ISearchable {
 
     private Maze maze;
-    private MazeState[][] stateMaze;
+    //private MazeState[][] stateMaze;
     private MazeState startState;
     private MazeState goalState;
 
@@ -16,12 +16,12 @@ public class SearchableMaze implements ISearchable {
         this.maze = maze;
         int row = maze.getRowSize();
         int col = maze.getColumnSize();
-        stateMaze = new MazeState[row][col];
+        //stateMaze = new MazeState[row][col];
 
         startState = new MazeState(maze.getStartPosition());
         int sRow= startState.getRowIndex();
         int sCol=startState.getColumnIndex();
-        stateMaze[sRow][sCol] = startState;
+        //stateMaze[sRow][sCol] = startState;
 
         goalState = new MazeState(maze.getGoalPosition());
 
@@ -65,17 +65,18 @@ public class SearchableMaze implements ISearchable {
 
     public boolean checkSuccessors(int row, int col, AState parentState, ArrayList<AState> successors,double cost){
         if(maze.getCell(row,col)==0) {
-            if(stateMaze[row][col]==null)
-                stateMaze[row][col]=new MazeState(new Position(row,col),parentState,cost+parentState.getCost());
+            MazeState mState = new MazeState(new Position(row,col),parentState,cost+parentState.getCost());
+            //if(stateMaze[row][col]==null)
+                //stateMaze[row][col]=new MazeState(new Position(row,col),parentState,cost+parentState.getCost());
 
-            successors.add(0,stateMaze[row][col]);
+            successors.add(mState);
             return true;
         }
         return false;
     }
 
     public void resetSearchable(){
-        for(int i = 0;i<maze.getRowSize(); i++){
+        /*for(int i = 0;i<maze.getRowSize(); i++){
             for(int j = 0; j< maze.getColumnSize();j++){
                 if (stateMaze[i][j] != null) {
                     if(stateMaze[i][j].equals(startState)){
@@ -85,6 +86,6 @@ public class SearchableMaze implements ISearchable {
                         stateMaze[i][j]=null;
                 }
             }
-        }
+        }*/
     }
 }
