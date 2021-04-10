@@ -8,15 +8,20 @@ public class RunSearchOnMaze {
 
 
         IMazeGenerator mg = new MyMazeGenerator();
-        Maze maze = mg.generate(10, 10);
+        Maze maze = mg.generate(6, 6);
         System.out.println(maze.toString());
 
         SearchableMaze searchableMaze = new SearchableMaze(maze);
+        solveProblem(searchableMaze, new DepthFirstSearch());
         solveProblem(searchableMaze, new BestFirstSearch());
         solveProblem(searchableMaze, new BreadthFirstSearch());
-        solveProblem(searchableMaze, new DepthFirstSearch());
 
 
+
+//        SearchableTest st = new SearchableTest();
+//        solveProblem(st, new BestFirstSearch());
+//        solveProblem(st, new BreadthFirstSearch());
+//        solveProblem(st, new DepthFirstSearch());
     }
     private static void solveProblem(ISearchable domain, ISearchingAlgorithm searcher) {
 //Solve a searching problem with a searcher
@@ -31,6 +36,5 @@ public class RunSearchOnMaze {
         /*for (int i = 0; i < solutionPath.size(); i++) {
             System.out.println(String.format("%s. %s",i,solutionPath.get(i)));
         }*/
-        //System.out.println(String.format("Maze generation time(ms): %s", searcher.measureAlgorithmTimeMillis(domain)));
     }
 }

@@ -2,26 +2,22 @@ package algorithms.search;
 
 import algorithms.mazeGenerators.Position;
 
+import java.util.Objects;
+
 public class MazeState extends AState {
+
     private Position pos;
 
+    //create mazeState
     public MazeState(Position pos, AState parentState, double cost) {
-        super(pos.toString(), parentState, cost);
+        super(parentState, cost);
         this.pos=pos;
     }
 
+    //create start mazeState
     public MazeState(Position pos) {
-        super(pos.toString());
+        super();
         this.pos=pos;
-    }
-
-    public MazeState(String state){
-        super(state);
-
-        int i = state.indexOf(",");
-        int row = Integer.valueOf(state.substring(1,i));
-        int col = Integer.valueOf(state.substring(i+1,state.length()-1));
-        pos  = new Position(row,col);
     }
 
     public int getRowIndex() {
@@ -34,4 +30,21 @@ public class MazeState extends AState {
         return pos.getColumnIndex();
     }
 
+    @Override
+    public String toString() {
+        return pos.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MazeState mazeState = (MazeState) o;
+        return pos.equals(mazeState.pos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pos);
+    }
 }

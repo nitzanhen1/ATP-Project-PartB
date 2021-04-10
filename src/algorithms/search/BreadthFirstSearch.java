@@ -8,11 +8,11 @@ import java.util.Queue;
 public class BreadthFirstSearch extends ASearchingAlgorithm{
 
     protected Queue<AState> openList;
+    protected HashSet<AState> visited;
 
 
     public BreadthFirstSearch() {
         super();
-        openList = new LinkedList<AState>();
         evaluated=0;
     }
 
@@ -21,14 +21,14 @@ public class BreadthFirstSearch extends ASearchingAlgorithm{
         return openList.poll();
     }
 
+    @Override
     public Solution solve(ISearchable domain) {
-        domain.resetSearchable();
-        openList.clear();
+        openList = new LinkedList<>();
+        visited= new HashSet<>();
         evaluated=0;
         AState start = domain.getStartState();
         AState goal = domain.getGoalState();
 
-        HashSet<AState> visited = new HashSet<>();
         openList.add(start);
         visited.add(start);
 
@@ -37,22 +37,25 @@ public class BreadthFirstSearch extends ASearchingAlgorithm{
 
         while (openList.size()>0){
             currState = this.pop();
+            if(currState.equals(goal))
+                return  returnPath(start,currState);
             neighbors=domain.getAllSuccessors(currState);
             for (AState s:neighbors) {
                 if(!visited.contains(s)){
                     openList.add(s);
                     visited.add(s);
 
-                    if(s.equals(goal))
-                        return  returnPath(start,s);
+
                 }
             }
         }
         return null;
     }
 
+
+
     @Override
     public String getName() {
-        return "Breadth First Search";
+        return "BreadthFirstSearch";
     }
 }
