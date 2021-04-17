@@ -8,27 +8,21 @@ public class MazeState extends AState {
 
     private Position pos;
 
-    //create mazeState
+    //constructor with params position, parent and cost
     public MazeState(Position pos, AState parentState, double cost) {
         super(parentState, cost);
         this.pos=pos;
     }
 
-    //create start mazeState
+    //constructor with params position
     public MazeState(Position pos) {
         super();
         this.pos=pos;
     }
 
-    public int getRowIndex() {
+    public int getRowIndex() {return pos.getRowIndex();}
 
-        return pos.getRowIndex();
-    }
-
-    public int getColumnIndex() {
-
-        return pos.getColumnIndex();
-    }
+    public int getColumnIndex() {return pos.getColumnIndex();}
 
     @Override
     public String toString() {

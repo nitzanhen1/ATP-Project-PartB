@@ -2,6 +2,11 @@ package algorithms.mazeGenerators;
 import java.util.Random;
 public class SimpleMazeGenerator extends AMazeGenerator {
 
+    /**
+     * params rowSize,columnSize- determine the size of the maze
+     * @return simple maze -all cells values are chosen at random (0,1), then carving a path from start to goal position
+     */
+
     @Override
     public Maze generate(int rowSize, int columnSize) {
 
@@ -9,13 +14,14 @@ public class SimpleMazeGenerator extends AMazeGenerator {
 
         Random rand = new Random();
         int num;
+        //randomly allocates values to the maze cells
         for(int i = 0; i < rowSize; i++){
             for(int j = 0; j < columnSize; j++){
                 num =rand.nextInt(2);
                 maze.setCell(i,j,num);
             }
         }
-
+        //carving path fro start to goal- in the shape of 'stairs'
         int currRow = maze.getStartPosition().getRowIndex();
         int currCol = maze.getStartPosition().getColumnIndex();
         int gRow = maze.getGoalPosition().getRowIndex();

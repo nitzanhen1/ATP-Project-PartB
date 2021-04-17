@@ -1,6 +1,9 @@
 package algorithms.mazeGenerators;
+import algorithms.maze3D.Maze3D;
+
 import java.util.LinkedList;
 import java.util.Random;
+
 public class MyMazeGenerator extends AMazeGenerator {
 
     @Override
@@ -28,26 +31,38 @@ public class MyMazeGenerator extends AMazeGenerator {
             {
                 maze.setCell(nextPath[0],nextPath[1],0);
                 maze.setCell(row,col,0);
-                if (maze.getCell(row-2,col) == 1 )
-                    passages.add( new int[]{row-1,col,row-2,col} );
-                if (maze.getCell(row,col-2) == 1 )
-                    passages.add( new int[]{row,col-1,row,col-2} );
-                if (maze.getCell(row+2,col) == 1 )
-                    passages.add( new int[]{row+1,col,row+2,col} );
-                if (maze.getCell(row,col+2) == 1 )
-                    passages.add( new int[]{row,col+1,row,col+2} );
+
+                passages.addAll(addNeighboringPassages(maze,row,col));
             }
         }
+        this.createPathForGoal(maze);
+        return maze;
+    }
 
-        row = maze.getGoalPosition().getRowIndex();
-        col = maze.getGoalPosition().getColumnIndex();
+
+
+    private LinkedList<int[]> addNeighboringPassages(Maze maze , int row , int col){
+        LinkedList<int[]> passages = new LinkedList<>();
+
+        if (maze.getCell(row-2,col) == 1 )
+            passages.add( new int[]{row-1,col,row-2,col} );
+        if (maze.getCell(row,col-2) == 1 )
+            passages.add( new int[]{row,col-1,row,col-2} );
+        if (maze.getCell(row+2,col) == 1 )
+            passages.add( new int[]{row+1,col,row+2,col} );
+        if (maze.getCell(row,col+2) == 1 )
+            passages.add( new int[]{row,col+1,row,col+2} );
+
+        return passages;
+    }
+
+    private void createPathForGoal(Maze maze) {
+        int row = maze.getGoalPosition().getRowIndex();
+        int col = maze.getGoalPosition().getColumnIndex();
         if(maze.getCell(row,col)==1) {
             maze.setCell(row, col, 0);
-            if(maze.getCell(row-1,col) != 0 && maze.getCell(row+1,col) != 0 && maze.getCell(row,col-1) != 0 && maze.getCell(row,col+1) != 0)
-                maze.setCell(row-1,col, 0);
+            if (maze.getCell(row - 1, col) != 0 && maze.getCell(row + 1, col) != 0 && maze.getCell(row, col - 1) != 0 && maze.getCell(row, col + 1) != 0)
+                maze.setCell(row - 1, col, 0);
         }
-
-
-        return maze;
     }
 }

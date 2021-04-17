@@ -2,20 +2,17 @@ package algorithms.search;
 
 public abstract class AState implements Comparable<AState> {
 
-    //private String state;
     private AState parentState;
     private double cost;
 
-    // create state
-    public AState(/*String state,*/ AState parentState, double cost) {
-        //this.state = state;
+    //constructor with params, parent and cost
+    public AState(AState parentState, double cost) {
         this.parentState = parentState;
         this.cost = cost;
     }
 
-    // create start state
-    public AState(/*String state*/) {
-        //this.state = state;
+    //constructor without params
+    public AState() {
         this.parentState = null;
         this.cost = 0;
 

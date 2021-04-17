@@ -5,15 +5,16 @@ import java.util.ArrayList;
 public class Solution {
     ArrayList<AState> solutionPath;
 
-    public Solution() {
-        this.solutionPath = new ArrayList<AState>();
-    }
+    public Solution() {this.solutionPath = new ArrayList<>(); }
 
     public ArrayList<AState> getSolutionPath() {
         return solutionPath;
     }
 
-    public void addSolutionPath(AState state) {
+    //add state to the solution list, at index 0
+    public void addSolutionPath(AState state) throws NullPointerException{
+        if(state==null)
+            throw new NullPointerException("expected AState, received Null");
         this.solutionPath.add(0,state);
     }
 }

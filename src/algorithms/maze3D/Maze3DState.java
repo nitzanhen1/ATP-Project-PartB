@@ -2,42 +2,31 @@ package algorithms.maze3D;
 
 import algorithms.mazeGenerators.Position;
 import algorithms.search.AState;
-
 import java.util.Objects;
 
 public class Maze3DState extends AState {
 
     private Position3D pos;
 
+    //constructor with params position3D, parent and cost
     public Maze3DState(Position3D pos, AState parentState, double cost) {
         super(parentState, cost);
         this.pos=pos;
     }
-
+    //constructor with params position3D
     public Maze3DState(Position3D pos) {
         super();
         this.pos=pos;
     }
 
-    public int getDepthIndex() {
+    public int getDepthIndex() { return pos.getDepthIndex(); }
 
-        return pos.getDepthIndex();
-    }
+    public int getRowIndex() { return pos.getRowIndex(); }
 
-    public int getRowIndex() {
-
-        return pos.getRowIndex();
-    }
-
-    public int getColumnIndex() {
-
-        return pos.getColumnIndex();
-    }
+    public int getColumnIndex() { return pos.getColumnIndex(); }
 
     @Override
-    public String toString() {
-        return pos.toString();
-    }
+    public String toString() { return pos.toString(); }
 
     @Override
     public boolean equals(Object o) {
