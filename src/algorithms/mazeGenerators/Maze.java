@@ -25,6 +25,68 @@ public class Maze {
         goalPosition= new Position(rand.nextInt(rowSize/2)+rowSize/2,columnSize-1);
     }
 
+    public Maze(byte[] mazeInByte){
+        int i=0;
+        int row,col;
+        int[] numAndIndex;
+
+        numAndIndex=getIntNum(mazeInByte,i);
+        this.rowSize=numAndIndex[0];
+        numAndIndex=getIntNum(mazeInByte,numAndIndex[1]);
+        this.columnSize=numAndIndex[0];
+
+        //start position
+        numAndIndex=getIntNum(mazeInByte,numAndIndex[1]);
+        row=numAndIndex[0];
+        numAndIndex=getIntNum(mazeInByte,numAndIndex[1]);
+        col=numAndIndex[0];
+        this.startPosition = new Position(row,col);
+
+        //goal position
+        numAndIndex=getIntNum(mazeInByte,numAndIndex[1]);
+        row=numAndIndex[0];
+        numAndIndex=getIntNum(mazeInByte,numAndIndex[1]);
+        col=numAndIndex[0];
+        this.goalPosition = new Position(row,col);
+
+        setAllMaze(mazeInByte,numAndIndex[1]);
+
+
+    }
+    private int[] getIntNum(byte[] array, int i){
+        int num=0;
+        while (array[i]!=(byte) 0) {
+            num += Byte.toUnsignedInt(array[i]);
+            i++;
+        }
+        return new int[]{num,++i};
+    }
+
+    private void setAllMaze(byte[] mazeInByte,int idx) {
+        int rowNum=0;
+        int colNum=0;
+        int num;
+        boolean flag=false;
+        while (rowNum<rowSize) {
+            while (colNum < columnSize) {
+                num= Byte.toUnsignedInt(mazeInByte[idx]);
+                while (num>0){
+                    if (!flag)
+                        setCell(rowNum,colNum,0);
+                    else
+                        setCell(rowNum,colNum,1);
+                    colNum++;
+                    num--;
+                }
+                flag= !flag;
+                idx++;
+            }
+            colNum=0;
+            rowNum++;
+        }
+    }
+
+
     public Position getGoalPosition() {
         return goalPosition;
     }
