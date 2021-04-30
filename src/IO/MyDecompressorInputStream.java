@@ -18,13 +18,25 @@ public class MyDecompressorInputStream extends InputStream {
 
     @Override
     public int read(byte[] b) throws IOException {
+        int num;
         for(int i=0;i<12;i++)
             b[i]=(byte)in.read();
         int idx=12;
-        while(idx<b.length) {
-            int num = Byte.toUnsignedInt((byte)in.read());
-
+        while(idx+8<b.length) {
+            num = Byte.toUnsignedInt((byte)in.read());
+            for(int i=7;i>=0;i--){
+                b[idx+i]=(byte)(num%2);
+                num=num/2;
+            }
+            idx=idx+8;
+        }
+        int rest= b.length-idx-1;
+        num = Byte.toUnsignedInt((byte)in.read());
+        for(int i=rest;i>=0;i--){
+            b[idx+i]=(byte)(num%2);
+            num=num/2;
         }
          return 0;
     }
+
 }
