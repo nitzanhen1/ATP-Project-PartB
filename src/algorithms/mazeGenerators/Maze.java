@@ -58,7 +58,6 @@ public class Maze {
 
         setAllMaze(mazeInByte,numAndIndex[1]);
 
-
     }
     private int[] getIntNum(byte[] array, int i){
         int num=0;
@@ -116,44 +115,45 @@ public class Maze {
             return;
         maze[row][column]=val;
     }
+    
+    
     public byte[] toByteArray(){
 
-        ArrayList<Byte> listMaze = new ArrayList<>();
-        addToByteList(rowSize,listMaze);
-        addToByteList(columnSize,listMaze);
-        addToByteList(startPosition.getRowIndex(),listMaze);
-        addToByteList(startPosition.getColumnIndex(),listMaze);
-        addToByteList(goalPosition.getRowIndex(),listMaze);
-        addToByteList(goalPosition.getColumnIndex(),listMaze);
+        ArrayList<Byte> listSizes = new ArrayList<>();
+        addToByteList(rowSize,listSizes);
+        addToByteList(columnSize,listSizes);
+        addToByteList(startPosition.getRowIndex(),listSizes);
+        addToByteList(startPosition.getColumnIndex(),listSizes);
+        addToByteList(goalPosition.getRowIndex(),listSizes);
+        addToByteList(goalPosition.getColumnIndex(),listSizes);
 
-        int counter=0;
+        byte[] byteArray = new byte[rowSize*columnSize+12];
+
+        for(int i=0;i<12;i++){
+            byteArray[i]=listSizes.get(i);
+        }
+
+        for(int i=0;i<rowSize;i++) {
+            for(int j=0;j<columnSize;j++) {
+                byteArray[i * columnSize + j + 12] = (byte) maze[i][j];
+            }
+        }
+
+        return byteArray;
+
+
+//compress
+        /*int counter=0;
         boolean color=false;// false= o,(path). true = 1,(wall)
         for(int i=0;i<rowSize;i++){
             for(int j=0;j<columnSize;j++){
-//                if(maze[i][j]==0){
-//                    if(!color)
-//                        counter++;
-//                    else{
-//                        addMazeToByteList(counter,listMaze);
-//                        counter=1;
-//                        color=false;
-//                    }
-//                }
-//                else {
-//                    if (color)
-//                        counter++;
-//                    else {
-//                        addMazeToByteList(counter, listMaze);
-//                        counter = 1;
-//                        color = true;
-//                    }
 
                 if(!color){
                     if(maze[i][j]==0){
                         counter++;
                     }
                     else{
-                        addMazeToByteList(counter,listMaze);
+                        addMazeToByteList(counter,listSizes);
                         counter=1;
                         color=true;
                     }
@@ -163,54 +163,77 @@ public class Maze {
                         counter++;
                     }
                     else{
-                        addMazeToByteList(counter,listMaze);
+                        addMazeToByteList(counter,listSizes);
                         counter=1;
                         color=false;
                     }
                 }
             }
-            addMazeToByteList(counter, listMaze);
+            addMazeToByteList(counter, listSizes);
             counter=0;
             color=false;
-        }
-
-        byte[] byteMaze = new byte[listMaze.size()];
-        for (int i=0;i<listMaze.size();i++){
-            byteMaze[i]=listMaze.get(i);
-        }
-        return byteMaze;
+        }*/
+        
     }
 
-    private void addMazeToByteList(int size,ArrayList<Byte> listMaze) {
+    private void addMazeToByteList(int size,ArrayList<Byte> listSizes) {
         int counter=size;
         if(counter==0){
-            listMaze.add((byte)0);
+            listSizes.add((byte)0);
             return;
         }
 
         while(counter>0){
             if(counter>255){
-                listMaze.add((byte)255);
-                listMaze.add((byte)0);
+                listSizes.add((byte)255);
+                listSizes.add((byte)0);
             }
             else
-                listMaze.add((byte)counter);
+                listSizes.add((byte)counter);
             counter=counter-255;
         }
 
     }
 
-    private void addToByteList(int size,ArrayList<Byte> listMaze){
-        int counter=size;
+    private void addToByteList(int size,ArrayList<Byte> listSizes){
+        listSizes.add((byte)(size/256));
+        listSizes.add((byte)(size%256));
+
+        /*int counter=size;
         while(counter>0){
             if(counter>255)
-                listMaze.add((byte)255);
+                listSizes.add((byte)255);
             else
-                listMaze.add((byte)counter);
+                listSizes.add((byte)counter);
             counter=counter-255;
         }
-        listMaze.add((byte)0);
+        listSizes.add((byte)0);*/
     }
+
+    /*public byte[] myByteArray(){
+        ArrayList<Byte> listSizes = new ArrayList<>();
+        addToByteList(rowSize,listSizes);
+        addToByteList(columnSize,listSizes);
+        addToByteList(startPosition.getRowIndex(),listSizes);
+        addToByteList(startPosition.getColumnIndex(),listSizes);
+        addToByteList(goalPosition.getRowIndex(),listSizes);
+        addToByteList(goalPosition.getColumnIndex(),listSizes);
+
+        int[] binaryArray = new int[8];
+        int i=0;int j=0;int counter=0;
+        while(i<rowSize){
+            while(j<columnSize){
+                if(counter<8) {
+                    binaryArray[counter] = maze[i][j];
+                    counter++;
+                }
+                else{
+
+                }
+
+            }
+        }
+    }*/
 
     public void print(){
         String mazeStr;
