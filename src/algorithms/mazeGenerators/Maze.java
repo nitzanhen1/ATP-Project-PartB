@@ -31,35 +31,25 @@ public class Maze {
         if(mazeInByte==null)
             throw new IllegalArgumentException("expected byte array, received null");
 
-        int i=0;
-        int row,col;
-        int[] numAndIndex;
+        this.rowSize= Byte.toUnsignedInt(mazeInByte[0])*256+Byte.toUnsignedInt(mazeInByte[1]);
+        this.columnSize= Byte.toUnsignedInt(mazeInByte[2])*256+Byte.toUnsignedInt(mazeInByte[3]);
+        this.maze = new int[rowSize][columnSize];
 
-        // ADD CONDITION MIN SIZE 2X2
-        numAndIndex=getIntNum(mazeInByte,i);
-        this.rowSize=numAndIndex[0];
-        numAndIndex=getIntNum(mazeInByte,numAndIndex[1]);
-        this.columnSize=numAndIndex[0];
-        maze = new int[rowSize][columnSize];
+        int row= Byte.toUnsignedInt(mazeInByte[4])*256+Byte.toUnsignedInt(mazeInByte[5]);
+        int col= Byte.toUnsignedInt(mazeInByte[6])*256+Byte.toUnsignedInt(mazeInByte[7]);
+        startPosition= new Position(row,col);
 
-        //start position
-        numAndIndex=getIntNum(mazeInByte,numAndIndex[1]);
-        row=numAndIndex[0];
-        numAndIndex=getIntNum(mazeInByte,numAndIndex[1]);
-        col=numAndIndex[0];
-        this.startPosition = new Position(row,col);
+        row= Byte.toUnsignedInt(mazeInByte[8])*256+Byte.toUnsignedInt(mazeInByte[9]);
+        col= Byte.toUnsignedInt(mazeInByte[10])*256+Byte.toUnsignedInt(mazeInByte[11]);
+        goalPosition= new Position(row,col);
 
-        //goal position
-        numAndIndex=getIntNum(mazeInByte,numAndIndex[1]);
-        row=numAndIndex[0];
-        numAndIndex=getIntNum(mazeInByte,numAndIndex[1]);
-        col=numAndIndex[0];
-        this.goalPosition = new Position(row,col);
-
-        setAllMaze(mazeInByte,numAndIndex[1]);
-
+        for (int i=0;i<rowSize;i++){
+            for(int j=0;j<columnSize;j++)
+                maze[i][j]=mazeInByte[i*columnSize+j+12];
+        }
     }
-    private int[] getIntNum(byte[] array, int i){
+
+    /*private int[] getIntNum(byte[] array, int i){
         int num=0;
         while (array[i]!=(byte) 0) {
             num += Byte.toUnsignedInt(array[i]);
@@ -91,7 +81,7 @@ public class Maze {
             colNum=0;
             rowNum++;
         }
-    }
+    }*/
 
 
     public Position getGoalPosition() {
@@ -115,8 +105,9 @@ public class Maze {
             return;
         maze[row][column]=val;
     }
-    
-    
+
+
+
     public byte[] toByteArray(){
 
         ArrayList<Byte> listSizes = new ArrayList<>();
@@ -173,10 +164,10 @@ public class Maze {
             counter=0;
             color=false;
         }*/
-        
+
     }
 
-    private void addMazeToByteList(int size,ArrayList<Byte> listSizes) {
+    /*private void addMazeToByteList(int size,ArrayList<Byte> listSizes) {
         int counter=size;
         if(counter==0){
             listSizes.add((byte)0);
@@ -193,7 +184,7 @@ public class Maze {
             counter=counter-255;
         }
 
-    }
+    }*/
 
     private void addToByteList(int size,ArrayList<Byte> listSizes){
         listSizes.add((byte)(size/256));
