@@ -1,7 +1,6 @@
 package test;
-import algorithms.mazeGenerators.AMazeGenerator;
-import algorithms.mazeGenerators.Maze;
-import algorithms.mazeGenerators.MyMazeGenerator;
+import algorithms.mazeGenerators.*;
+
 import java.io.*;
 import IO.*;
 import java.util.Arrays;
@@ -9,7 +8,7 @@ import java.util.Arrays;
 public class RunCompressDecompressMaze {
     public static void main(String[] args) {
         String mazeFileName = "savedMaze.maze";
-        AMazeGenerator mazeGenerator = new MyMazeGenerator();
+        AMazeGenerator mazeGenerator = new SimpleMazeGenerator();
         Maze maze = mazeGenerator.generate(1000, 1000); //Generate new maze
         try {
             // save maze to a file
@@ -32,8 +31,8 @@ public class RunCompressDecompressMaze {
         }
         Maze loadedMaze = new Maze(savedMazeBytes);
         boolean areMazesEquals = Arrays.equals(loadedMaze.toByteArray(),maze.toByteArray());
-        //System.out.println(maze.toString());
-        /*byte[] mazeByte= maze.toByteArray();
+        /*System.out.println(maze.toString());
+        byte[] mazeByte= maze.toByteArray();
         for(int i=0;i<mazeByte.length;i++)
         {
             System.out.print(Byte.toUnsignedInt(mazeByte[i])+" ");

@@ -24,11 +24,6 @@ public class SimpleDecompressorInputStream extends InputStream {
         for(int i=0;i<12;i++)
             b[i]=(byte)in.read();
 
-        /*int rowSize= Byte.toUnsignedInt(b[0])*256+Byte.toUnsignedInt(b[1]);
-        int colSize= Byte.toUnsignedInt(b[2])*256+Byte.toUnsignedInt(b[3]);
-        int rowNum=0;
-        int colNum=0;*/
-
         int num;
         int idx=12;
         boolean flag=false;
@@ -45,24 +40,7 @@ public class SimpleDecompressorInputStream extends InputStream {
             flag=!flag;
         }
 
-        /*while (rowNum<rowSize) {
-            flag=false;
-            while (colNum < colSize) {
-                num= Byte.toUnsignedInt((byte)in.read());
-                while (num>0){
-                    if (!flag)
-                        b[idx]=0;
-                    else
-                        b[idx]=1;
-                    idx++;
-                    colNum++;
-                    num--;
-                }
-                flag= !flag;
-            }
-            colNum=0;
-            rowNum++;
-        }*/
+
         return 0;
     }
 }
