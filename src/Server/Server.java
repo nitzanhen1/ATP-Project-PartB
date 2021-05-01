@@ -7,6 +7,8 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static java.lang.Thread.sleep;
+
 public class Server {
     private int port;
     private int listeningIntervalMS;
@@ -22,8 +24,12 @@ public class Server {
         this.threadPool = Executors.newFixedThreadPool(2);
     }
 
-
     public void start(){
+        new Thread(() -> {
+            runServer();
+        }).start();
+    }
+    public void runServer(){
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             serverSocket.setSoTimeout(listeningIntervalMS);
