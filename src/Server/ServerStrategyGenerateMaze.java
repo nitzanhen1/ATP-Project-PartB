@@ -10,15 +10,15 @@ import java.io.*;
 public class ServerStrategyGenerateMaze implements IServerStrategy {
 
     @Override
-    public void applyStrategy(InputStream inFromClient, OutputStream outToClient) {
+    public void ServerStrategy(InputStream inputStream, OutputStream outputStream) {
         try {
-            ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
-            ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
+            ObjectInputStream fromClient = new ObjectInputStream(inputStream);
+            ObjectOutputStream toClient = new ObjectOutputStream(outputStream);
 
             try {
                 int [] arraySize =(int [])(fromClient.readObject());
-
-                AMazeGenerator mg= new MyMazeGenerator();
+                /*configuration*/
+                AMazeGenerator mg= Configurations.getMazeGeneratingAlgorithm();
                 // generating the new maze and change it to byte array
                 Maze maze=mg.generate(arraySize[0],arraySize[1]);
                 // creating an instance of MyCompress

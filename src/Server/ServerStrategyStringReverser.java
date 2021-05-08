@@ -6,12 +6,12 @@ import java.util.Locale;
 
 public class ServerStrategyStringReverser implements IServerStrategy{
     @Override
-    public void applyStrategy(InputStream inFromClient, OutputStream outToClient) {
+    public void ServerStrategy(InputStream inputStream, OutputStream outputStream) {
         // The Streams from Channels are interruptible,
         // so we decorate our input stream even more to enable it to also be interruptible:
-        InputStream interruptibleInputStream = Channels.newInputStream(Channels.newChannel(inFromClient));
+        InputStream interruptibleInputStream = Channels.newInputStream(Channels.newChannel(inputStream));
         BufferedReader fromClient = new BufferedReader(new InputStreamReader(interruptibleInputStream));
-        BufferedWriter toClient = new BufferedWriter(new PrintWriter(outToClient));
+        BufferedWriter toClient = new BufferedWriter(new PrintWriter(outputStream));
 
         String clientCommand;
         try {

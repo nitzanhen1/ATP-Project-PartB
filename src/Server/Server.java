@@ -20,8 +20,9 @@ public class Server {
         this.port = port;
         this.listeningIntervalMS = listeningIntervalMS;
         this.strategy = strategy;
-        // initialize a new fixed thread pool with 2 threads:
-        this.threadPool = Executors.newFixedThreadPool(2);
+        /*configuration*/
+        Configurations.getInstance();
+        this.threadPool = Executors.newFixedThreadPool(Configurations.getThreadPoolSize());
     }
 
     public void start(){
@@ -47,8 +48,8 @@ public class Server {
                 }
             }
             serverSocket.close();
-            //threadPool.shutdown(); // do not allow any new tasks into the thread pool (not doing anything to the current tasks and running threads)
-            threadPool.shutdownNow(); // do not allow any new tasks into the thread pool, and also interrupts all running threads (do not terminate the threads, so if they do not handle interrupts properly, they could never stop...)
+            threadPool.shutdown(); // do not allow any new tasks into the thread pool (not doing anything to the current tasks and running threads)
+            //threadPool.shutdownNow(); // do not allow any new tasks into the thread pool, and also interrupts all running threads (do not terminate the threads, so if they do not handle interrupts properly, they could never stop...)
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,7 +57,7 @@ public class Server {
 
     private void handleClient(Socket clientSocket) {
         try {
-            strategy.applyStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
+            strategy.ServerStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
             clientSocket.close();
         } catch (IOException e){
             e.printStackTrace();

@@ -14,10 +14,10 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
     private AtomicInteger counter=new AtomicInteger(1);
 
     @Override
-    public void applyStrategy(InputStream inFromClient, OutputStream outToClient) {
+    public void ServerStrategy(InputStream inputStream, OutputStream outputStream) {
         try {
-            ObjectInputStream fromClient = new ObjectInputStream(inFromClient);
-            ObjectOutputStream toClient = new ObjectOutputStream(outToClient);
+            ObjectInputStream fromClient = new ObjectInputStream(inputStream);
+            ObjectOutputStream toClient = new ObjectOutputStream(outputStream);
 
             try {
                 String tempDirectoryPath = System.getProperty("java.io.tmpdir");
@@ -31,8 +31,8 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
                 String MazeIntoString = ConvertByteArrayToString(byteOut.toByteArray());
                 Solution solution;
                 String SolPath;
-
-                ISearchingAlgorithm searcher=new BestFirstSearch();
+                /*configuration*/
+                ISearchingAlgorithm searcher=Configurations.getMazeSearchingAlgorithm();
                 ISearchable searchableMaze = new SearchableMaze(maze);
 
                 if(SolMap.containsKey(MazeIntoString)) //There is already solution for the maze
