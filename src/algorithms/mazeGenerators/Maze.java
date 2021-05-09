@@ -1,8 +1,6 @@
 package algorithms.mazeGenerators;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Maze implements Serializable {
     private Position startPosition;
@@ -50,41 +48,6 @@ public class Maze implements Serializable {
         }
     }
 
-    /*private int[] getIntNum(byte[] array, int i){
-        int num=0;
-        while (array[i]!=(byte) 0) {
-            num += Byte.toUnsignedInt(array[i]);
-            i++;
-        }
-        return new int[]{num,++i};
-    }
-
-    private void setAllMaze(byte[] mazeInByte,int idx) {
-        int rowNum=0;
-        int colNum=0;
-        int num;
-        boolean flag;
-        while (rowNum<rowSize) {
-            flag=false;
-            while (colNum < columnSize) {
-                num= Byte.toUnsignedInt(mazeInByte[idx]);
-                while (num>0){
-                    if (!flag)
-                        setCell(rowNum,colNum,0);
-                    else
-                        setCell(rowNum,colNum,1);
-                    colNum++;
-                    num--;
-                }
-                flag= !flag;
-                idx++;
-            }
-            colNum=0;
-            rowNum++;
-        }
-    }*/
-
-
     public Position getGoalPosition() {
         return goalPosition;
     }
@@ -106,8 +69,6 @@ public class Maze implements Serializable {
             return;
         maze[row][column]=val;
     }
-
-
 
     public byte[] toByteArray(){
 
@@ -132,100 +93,12 @@ public class Maze implements Serializable {
         }
 
         return byteArray;
-
-
-//compress
-        /*int counter=0;
-        boolean color=false;// false= o,(path). true = 1,(wall)
-        for(int i=0;i<rowSize;i++){
-            for(int j=0;j<columnSize;j++){
-
-                if(!color){
-                    if(maze[i][j]==0){
-                        counter++;
-                    }
-                    else{
-                        addMazeToByteList(counter,listSizes);
-                        counter=1;
-                        color=true;
-                    }
-                }
-                else{
-                    if(maze[i][j]==1){
-                        counter++;
-                    }
-                    else{
-                        addMazeToByteList(counter,listSizes);
-                        counter=1;
-                        color=false;
-                    }
-                }
-            }
-            addMazeToByteList(counter, listSizes);
-            counter=0;
-            color=false;
-        }*/
-
     }
-
-    /*private void addMazeToByteList(int size,ArrayList<Byte> listSizes) {
-        int counter=size;
-        if(counter==0){
-            listSizes.add((byte)0);
-            return;
-        }
-
-        while(counter>0){
-            if(counter>255){
-                listSizes.add((byte)255);
-                listSizes.add((byte)0);
-            }
-            else
-                listSizes.add((byte)counter);
-            counter=counter-255;
-        }
-
-    }*/
 
     private void addToByteList(int size,ArrayList<Byte> listSizes){
         listSizes.add((byte)(size/256));
         listSizes.add((byte)(size%256));
-
-        /*int counter=size;
-        while(counter>0){
-            if(counter>255)
-                listSizes.add((byte)255);
-            else
-                listSizes.add((byte)counter);
-            counter=counter-255;
-        }
-        listSizes.add((byte)0);*/
     }
-
-    /*public byte[] myByteArray(){
-        ArrayList<Byte> listSizes = new ArrayList<>();
-        addToByteList(rowSize,listSizes);
-        addToByteList(columnSize,listSizes);
-        addToByteList(startPosition.getRowIndex(),listSizes);
-        addToByteList(startPosition.getColumnIndex(),listSizes);
-        addToByteList(goalPosition.getRowIndex(),listSizes);
-        addToByteList(goalPosition.getColumnIndex(),listSizes);
-
-        int[] binaryArray = new int[8];
-        int i=0;int j=0;int counter=0;
-        while(i<rowSize){
-            while(j<columnSize){
-                if(counter<8) {
-                    binaryArray[counter] = maze[i][j];
-                    counter++;
-                }
-                else{
-
-                }
-
-            }
-        }
-    }*/
 
     public void print(){
         String mazeStr;
@@ -271,6 +144,25 @@ public class Maze implements Serializable {
         }
         return b.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Maze maze1 = (Maze) o;
+        return rowSize == maze1.rowSize && columnSize == maze1.columnSize && Objects.equals(startPosition, maze1.startPosition) && Objects.equals(goalPosition, maze1.goalPosition) && Arrays.equals(maze, maze1.maze);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(startPosition, goalPosition, rowSize, columnSize);
+        for (int i = 0; i < rowSize; i++) {
+            for (int j = 0; j < columnSize; j++)
+                result += maze[i][j] * (i * columnSize + j);
+        }
+        return result;
+    }
+
 }
 
 

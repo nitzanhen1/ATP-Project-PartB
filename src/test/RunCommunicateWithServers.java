@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class RunCommunicateWithServers {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 //Initializing servers
         Server mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
         Server solveSearchProblemServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
@@ -22,10 +22,20 @@ Server stringReverserServer = new Server(5402, 1000, new ServerStrategyStringRev
         mazeGeneratingServer.start();
 stringReverserServer.start();
 //Communicating with servers
-        CommunicateWithServer_MazeGenerating();
-        CommunicateWithServer_SolveSearchProblem();
-CommunicateWithServer_StringReverser();
+        for(int i=0; i<50;i++){
+//            new Thread(() -> {
+//                CommunicateWithServer_MazeGenerating();
+//            }).start();
+            //Thread.currentThread().sleep(1000);
+            new Thread(() -> {
+                CommunicateWithServer_StringReverser();
+                //CommunicateWithServer_SolveSearchProblem();
+            }).start();
+            //Thread.currentThread().sleep(1000);
+        }
+//CommunicateWithServer_StringReverser();
 //Stopping all servers
+        Thread.currentThread().sleep(1000);
         mazeGeneratingServer.stop();
         solveSearchProblemServer.stop();
 stringReverserServer.stop();
@@ -39,7 +49,7 @@ stringReverserServer.stop();
                                 ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
                                 ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
                                 toServer.flush();
-                                int[] mazeDimensions = new int[]{50, 50};
+                                int[] mazeDimensions = new int[]{5, 5};
                                 toServer.writeObject(mazeDimensions); //send mazedimensions to server
                                 toServer.flush();
                                 byte[] compressedMaze = (byte[])
@@ -49,6 +59,7 @@ stringReverserServer.stop();
                                 is.read(decompressedMaze); //Fill decompressedMaze with bytes
                                 Maze maze = new Maze(decompressedMaze);
                                 maze.print();
+                                System.out.println("\n");
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -69,9 +80,10 @@ stringReverserServer.stop();
                                 ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
                                 ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
                                 toServer.flush();
-                                MyMazeGenerator mg = new MyMazeGenerator();
-                                Maze maze = mg.generate(50, 50);
+                                IMazeGenerator mg = new EmptyMazeGenerator();
+                                Maze maze = mg.generate(5, 5);
                                 maze.print();
+
                                 toServer.writeObject(maze); //send maze to server
                                 toServer.flush();
                                 Solution mazeSolution = (Solution)fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
@@ -83,6 +95,7 @@ stringReverserServer.stop();
                                     System.out.println(String.format("%s. %s", i,
                                             mazeSolutionSteps.get(i).toString()));
                                 }
+                                System.out.println("\n");
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

@@ -12,16 +12,13 @@ import java.util.Properties;
 public class Configurations {
 
     private static Configurations conf = null;
-    private static Properties properties;
+    private static Properties properties ;
     private static final String path=System.getProperty("user.dir")+"/resources/config.properties";
 
     private Configurations(){
         properties = new Properties();
         try {
-            properties.setProperty("threadPoolSize","10");
-            properties.setProperty("mazeGeneratingAlgorithm","MyMazeGenerator");
-            properties.setProperty("mazeSearchingAlgorithm","BreadthFirstSearch");
-            properties.store(new FileOutputStream(path),null);
+            properties.load(new FileInputStream(path));
         } catch (IOException e) {
             e.printStackTrace();
         }

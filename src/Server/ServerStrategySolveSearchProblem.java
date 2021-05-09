@@ -5,6 +5,9 @@ import algorithms.mazeGenerators.Maze;
 import algorithms.search.*;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,46 +24,66 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
 
             try {
                 String tempDirectoryPath = System.getProperty("java.io.tmpdir");
-
-                // readObject - read the output from client(the input to server)
+                //String tempDirectoryPath = "/Users/malkahanimov/Desktop";
+                System.out.println(tempDirectoryPath);
                 Maze maze = (Maze)(fromClient.readObject());
-                ByteArrayOutputStream byteOut= new ByteArrayOutputStream();
-                MyCompressorOutputStream MyCompress = new MyCompressorOutputStream(byteOut);
-                // write in the output stream the compressed maze which will be send to the client
-                MyCompress.write(maze.toByteArray());
-                String MazeIntoString = ConvertByteArrayToString(byteOut.toByteArray());
-                Solution solution;
-                String SolPath;
-                /*configuration*/
-                ISearchingAlgorithm searcher=Configurations.getMazeSearchingAlgorithm();
-                ISearchable searchableMaze = new SearchableMaze(maze);
 
-                if(SolMap.containsKey(MazeIntoString)) //There is already solution for the maze
-                {
-                    SolPath=SolMap.get(MazeIntoString);
-                    ObjectInputStream inSolution = new ObjectInputStream(new FileInputStream(SolPath));
-                    solution = (Solution)(inSolution.readObject());
-                    inSolution.close();
+                Solution solution=null;
+                int hashMaze = maze.hashCode();
+                String solPath= tempDirectoryPath +"/"+"Solution"+hashMaze;
+                //if(Files.exists(Path.of(SolPath))
+                File dir = new File(tempDirectoryPath);
+                // list the files using a anonymous FileFilter
+                File[] files = dir.listFiles(new FileFilter() {
+                    @Override
+                    public boolean accept(File file) {
+                        return file.getName().startsWith("Solution"+hashMaze);
+                    }
+                });
+                System.out.println(hashMaze);
+                boolean flag = false;
+                if(files.length!=0) {
+                    //file exist, need to compare files with byteArray
+                    System.out.println("len > 0!!!!");
+                    ObjectInputStream inSolution;
+                    ArrayList<Object> loadSol;
+                    for (File file : files) {
+                        inSolution = new ObjectInputStream(new FileInputStream(file));
+                        loadSol = (ArrayList<Object>) (inSolution.readObject());
+                        System.out.println(file.getName());
+                        byte[] loadMaze = (byte[]) loadSol.get(0);
+                        String s1 = Convert(maze.toByteArray());
+                        String s2 = Convert(loadMaze);
+                        if (s1.equals(s2)) {
+                            System.out.println("found!!!!");
+                            solution = (Solution) loadSol.get(1);
+                            flag = true;
+                            inSolution.close();
+                            break;
+                        }
+                        inSolution.close();
+                    }
 
                 }
-                else //creating new solution
-                {
-                    solution=searcher.solve(searchableMaze); //solving the maze
-                    SolPath=tempDirectoryPath +"\\"+"Solution"+counter.getAndIncrement(); //Name OF the file
-                    ObjectOutputStream outSolution = new ObjectOutputStream(new FileOutputStream(SolPath));
-                    outSolution.writeObject(solution);
+                if(files.length==0 || !flag){
+                    System.out.println("not found!!!!"+flag+" "+files.length);
+                    ISearchingAlgorithm searcher = Configurations.getMazeSearchingAlgorithm();
+                    ISearchable searchableMaze = new SearchableMaze(maze);
+                    solution = searcher.solve(searchableMaze); //solving the maze
+                    solPath = solPath + "_" + counter.getAndIncrement(); //Name OF the file
+                    ObjectOutputStream outSolution = new ObjectOutputStream(new FileOutputStream(solPath));
+                    ArrayList<Object> saveObj = new ArrayList<>();
+                    saveObj.add(maze.toByteArray());
+                    saveObj.add(solution);
+                    outSolution.writeObject(saveObj);
                     outSolution.flush();
-                    addToMap(MazeIntoString,SolPath); //write into the hashMap
                     outSolution.close();
-
                 }
 
                 toClient.writeObject(solution);
                 toClient.flush();
-
                 fromClient.close();
                 toClient.close();
-
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -70,8 +93,7 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
             e.printStackTrace();
         }
     }
-
-    public String ConvertByteArrayToString(byte[] byteMaze)
+    public String Convert(byte[] byteMaze)
     {
         String temp="";
 
@@ -80,10 +102,5 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
             temp+=String.valueOf(byteMaze[i]);
         }
         return temp;
-    }
-
-    public synchronized void addToMap(String maze,String path)
-    {
-        SolMap.put(maze,path);
     }
 }

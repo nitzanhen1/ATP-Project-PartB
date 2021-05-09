@@ -44,12 +44,11 @@ public class Server {
                     });
 
                 } catch (SocketTimeoutException e){
-                    System.out.println("Socket timeout");
+                    //System.out.println("Socket timeout");
                 }
             }
             serverSocket.close();
-            threadPool.shutdown(); // do not allow any new tasks into the thread pool (not doing anything to the current tasks and running threads)
-            //threadPool.shutdownNow(); // do not allow any new tasks into the thread pool, and also interrupts all running threads (do not terminate the threads, so if they do not handle interrupts properly, they could never stop...)
+            threadPool.shutdown();
         } catch (IOException e) {
             e.printStackTrace();
         }
