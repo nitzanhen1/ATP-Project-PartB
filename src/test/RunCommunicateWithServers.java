@@ -1,10 +1,9 @@
 package test;
-import Server.*;
 import Client.*;
 import IO.*;
+import Server.*;
 import algorithms.mazeGenerators.*;
 import algorithms.search.*;
-
 
 import java.io.*;
 import java.net.InetAddress;
@@ -12,33 +11,23 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class RunCommunicateWithServers {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 //Initializing servers
         Server mazeGeneratingServer = new Server(5400, 1000, new ServerStrategyGenerateMaze());
         Server solveSearchProblemServer = new Server(5401, 1000, new ServerStrategySolveSearchProblem());
-Server stringReverserServer = new Server(5402, 1000, new ServerStrategyStringReverser());
+//Server stringReverserServer = new Server(5402, 1000, new ServerStrategyStringReverser());
 //Starting servers
         solveSearchProblemServer.start();
         mazeGeneratingServer.start();
-stringReverserServer.start();
+//stringReverserServer.start();
 //Communicating with servers
-        for(int i=0; i<50;i++){
-//            new Thread(() -> {
-//                CommunicateWithServer_MazeGenerating();
-//            }).start();
-            //Thread.currentThread().sleep(1000);
-            new Thread(() -> {
-                CommunicateWithServer_StringReverser();
-                //CommunicateWithServer_SolveSearchProblem();
-            }).start();
-            //Thread.currentThread().sleep(1000);
-        }
+        CommunicateWithServer_MazeGenerating();
+        CommunicateWithServer_SolveSearchProblem();
 //CommunicateWithServer_StringReverser();
 //Stopping all servers
-        Thread.currentThread().sleep(1000);
         mazeGeneratingServer.stop();
         solveSearchProblemServer.stop();
-stringReverserServer.stop();
+//stringReverserServer.stop();
     }
     private static void CommunicateWithServer_MazeGenerating() {
         try {
@@ -49,17 +38,16 @@ stringReverserServer.stop();
                                 ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
                                 ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
                                 toServer.flush();
-                                int[] mazeDimensions = new int[]{5, 5};
-                                toServer.writeObject(mazeDimensions); //send mazedimensions to server
+                                int[] mazeDimensions = new int[]{50, 50};
+                                toServer.writeObject(mazeDimensions); //send maze dimensions to server
                                 toServer.flush();
                                 byte[] compressedMaze = (byte[])
-                                        fromServer.readObject(); //read generated maze (compressed withMyCompressor) from server
+                                        fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
                                 InputStream is = new MyDecompressorInputStream(new ByteArrayInputStream(compressedMaze));
-                                byte[] decompressedMaze = new byte[2512]; /*CHANGESIZE ACCORDING TO YOU MAZE SIZE*/; //allocating byte[] for the decompressed maze -
+                                byte[] decompressedMaze = new byte[2512 /*CHANGESIZE ACCORDING TO YOU MAZE SIZE*/]; //allocating byte[] for the decompressedmaze -
                                 is.read(decompressedMaze); //Fill decompressedMaze with bytes
                                 Maze maze = new Maze(decompressedMaze);
                                 maze.print();
-                                System.out.println("\n");
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -72,30 +60,31 @@ stringReverserServer.stop();
     }
     private static void CommunicateWithServer_SolveSearchProblem() {
         try {
-            Client client = new Client(InetAddress.getLocalHost(), 5401, new IClientStrategy() {
+            Client client = new Client(InetAddress.getLocalHost(), 5401, new
+                    IClientStrategy() {
                         @Override
                         public void clientStrategy(InputStream inFromServer,
                                                    OutputStream outToServer) {
                             try {
-                                ObjectOutputStream toServer = new ObjectOutputStream(outToServer);
-                                ObjectInputStream fromServer = new ObjectInputStream(inFromServer);
+                                ObjectOutputStream toServer = new
+                                        ObjectOutputStream(outToServer);
+                                ObjectInputStream fromServer = new
+                                        ObjectInputStream(inFromServer);
                                 toServer.flush();
-                                IMazeGenerator mg = new EmptyMazeGenerator();
-                                Maze maze = mg.generate(5, 5);
+                                MyMazeGenerator mg = new MyMazeGenerator();
+                                Maze maze = mg.generate(50, 50);
                                 maze.print();
-
                                 toServer.writeObject(maze); //send maze to server
                                 toServer.flush();
-                                Solution mazeSolution = (Solution)fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server
-
+                                Solution mazeSolution = (Solution)
+                                        fromServer.readObject(); //read generated maze (compressed with MyCompressor) from server %s", mazeSolution));
 //Print Maze Solution retrieved from the server
-                                System.out.println(String.format("Solution steps: %s", mazeSolution));
+                                System.out.println(String.format("Solution steps: %s",mazeSolution));
                                 ArrayList<AState> mazeSolutionSteps = mazeSolution.getSolutionPath();
                                 for (int i = 0; i < mazeSolutionSteps.size(); i++) {
                                     System.out.println(String.format("%s. %s", i,
                                             mazeSolutionSteps.get(i).toString()));
                                 }
-                                System.out.println("\n");
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -108,21 +97,21 @@ stringReverserServer.stop();
     }
     private static void CommunicateWithServer_StringReverser() {
         try {
-            Client client = new Client(InetAddress.getLocalHost(), 5402, new IClientStrategy() {
+            Client client = new Client(InetAddress.getLocalHost(), 5402, new
+                    IClientStrategy() {
                         @Override
-                        public void clientStrategy(InputStream inFromServer,
-                                                   OutputStream outToServer) {
+                        public void clientStrategy(InputStream inFromServer,OutputStream outToServer) {
                             try {
-                                BufferedReader fromServer = new BufferedReader(new InputStreamReader(inFromServer));
+                                BufferedReader fromServer = new BufferedReader(new
+                                        InputStreamReader(inFromServer));
                                 PrintWriter toServer = new PrintWriter(outToServer);
-
                                 String message = "Client Message";
                                 String serverResponse;
                                 toServer.write(message + "\n");
                                 toServer.flush();
                                 serverResponse = fromServer.readLine();
                                 System.out.println(String.format("Server response: %s", serverResponse));
-                                toServer.flush();
+                                        toServer.flush();
                                 fromServer.close();
                                 toServer.close();
                             } catch (Exception e) {

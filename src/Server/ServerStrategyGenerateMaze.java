@@ -12,10 +12,16 @@ public class ServerStrategyGenerateMaze implements IServerStrategy {
     @Override
     public void ServerStrategy(InputStream inputStream, OutputStream outputStream) {
         try {
+            //initialize the streams input from the client and output to the client
+
             ObjectInputStream fromClient = new ObjectInputStream(inputStream);
             ObjectOutputStream toClient = new ObjectOutputStream(outputStream);
 
             try {
+                //receive from client sizes of wanted maze
+                // then transform the maze to byte array representation
+                // and send it to the compressor
+                //client receive compressed array
                 int [] arraySize =(int [])(fromClient.readObject());
                 /*configuration*/
                 AMazeGenerator mg= Configurations.getMazeGeneratingAlgorithm();

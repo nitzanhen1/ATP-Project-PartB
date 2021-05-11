@@ -26,22 +26,39 @@ public class Maze implements Serializable {
         goalPosition= new Position(rand.nextInt(rowSize/2)+rowSize/2,columnSize-1);
     }
 
+    /**
+     * @param mazeInByte maze in 1D byte array representation
+     *  create 2D maze based on the byte array, 12 first cell of the array represents the array sizes and goal and start position
+     * each two cells  of the 12 first represented a size as: 1st cell- division by 256, 2nd cell module 256
+     */
     public Maze(byte[] mazeInByte){
         if(mazeInByte==null)
             throw new IllegalArgumentException("expected byte array, received null");
 
+        //get the sizes of the maze from the array.
         this.rowSize= Byte.toUnsignedInt(mazeInByte[0])*256+Byte.toUnsignedInt(mazeInByte[1]);
         this.columnSize= Byte.toUnsignedInt(mazeInByte[2])*256+Byte.toUnsignedInt(mazeInByte[3]);
+        if(rowSize<2 || columnSize<2)
+            throw new IllegalArgumentException("min size of maze is 2x2");
+        //create the maze 2D array
         this.maze = new int[rowSize][columnSize];
 
+        //get start pos
         int row= Byte.toUnsignedInt(mazeInByte[4])*256+Byte.toUnsignedInt(mazeInByte[5]);
         int col= Byte.toUnsignedInt(mazeInByte[6])*256+Byte.toUnsignedInt(mazeInByte[7]);
+        if(row<0 || row>=rowSize || col<0 || col>=columnSize)
+            throw new IllegalArgumentException("start position not within maze boundries");
         startPosition= new Position(row,col);
 
+        //get goal pos
         row= Byte.toUnsignedInt(mazeInByte[8])*256+Byte.toUnsignedInt(mazeInByte[9]);
         col= Byte.toUnsignedInt(mazeInByte[10])*256+Byte.toUnsignedInt(mazeInByte[11]);
+        if(row<0 || row>=rowSize || col<0 || col>=columnSize)
+            throw new IllegalArgumentException("start position not within maze boundries");
         goalPosition= new Position(row,col);
 
+        //after 12 first cell, each cell represent the value of the cell in the maze
+        //this loop gets each cell value from the byte array to the 2d int array
         for (int i=0;i<rowSize;i++){
             for(int j=0;j<columnSize;j++)
                 maze[i][j]=mazeInByte[i*columnSize+j+12];
@@ -71,8 +88,9 @@ public class Maze implements Serializable {
     }
 
     public byte[] toByteArray(){
-
+        //creating a dynamic arraylist that will become the byte arry representation of the maze
         ArrayList<Byte> listSizes = new ArrayList<>();
+        //first we add the maze sizes and positions, with the addToByteList func
         addToByteList(rowSize,listSizes);
         addToByteList(columnSize,listSizes);
         addToByteList(startPosition.getRowIndex(),listSizes);
@@ -80,22 +98,24 @@ public class Maze implements Serializable {
         addToByteList(goalPosition.getRowIndex(),listSizes);
         addToByteList(goalPosition.getColumnIndex(),listSizes);
 
+        //creating the byte array
         byte[] byteArray = new byte[rowSize*columnSize+12];
-
+        //filling the sizes and position to the byte array
         for(int i=0;i<12;i++){
             byteArray[i]=listSizes.get(i);
         }
-
+        //filling each cell value to the byte array in the correct index
         for(int i=0;i<rowSize;i++) {
             for(int j=0;j<columnSize;j++) {
                 byteArray[i * columnSize + j + 12] = (byte) maze[i][j];
             }
         }
-
         return byteArray;
     }
 
     private void addToByteList(int size,ArrayList<Byte> listSizes){
+        //create a fixed-size byte representation for integer numbers
+        //1st cell is division by 256. 2nd cell is module 256
         listSizes.add((byte)(size/256));
         listSizes.add((byte)(size%256));
     }
@@ -119,31 +139,27 @@ public class Maze implements Serializable {
         }
     }
 
-    public int[][] getMaze() {
-        return maze;
-    }
-
-    public static final char WALL_CHAR = '▓';
-    public String toString(){
-
-        final StringBuffer b = new StringBuffer();
-        for ( int x = 0; x < rowSize ; x++ ){
-            for ( int y = 0; y < columnSize; y++ ){
-                if(x==startPosition.getRowIndex()&&y==startPosition.getColumnIndex())
-                    b.append("S ");
-                else if(x==goalPosition.getRowIndex()&&y==goalPosition.getColumnIndex())
-                    b.append("E ");
-                else if(maze[x][y] == 1){
-                    b.append( WALL_CHAR );
-                    b.append( WALL_CHAR );
-                }
-                else
-                    b.append("  ");
-            }
-            b.append( '\n' );
-        }
-        return b.toString();
-    }
+//    public static final char WALL_CHAR = '▓';
+//    public String toString(){
+//
+//        final StringBuffer b = new StringBuffer();
+//        for ( int x = 0; x < rowSize ; x++ ){
+//            for ( int y = 0; y < columnSize; y++ ){
+//                if(x==startPosition.getRowIndex()&&y==startPosition.getColumnIndex())
+//                    b.append("S ");
+//                else if(x==goalPosition.getRowIndex()&&y==goalPosition.getColumnIndex())
+//                    b.append("E ");
+//                else if(maze[x][y] == 1){
+//                    b.append( WALL_CHAR );
+//                    b.append( WALL_CHAR );
+//                }
+//                else
+//                    b.append("  ");
+//            }
+//            b.append( '\n' );
+//        }
+//        return b.toString();
+//    }
 
     @Override
     public boolean equals(Object o) {
@@ -162,7 +178,6 @@ public class Maze implements Serializable {
         }
         return result;
     }
-
 }
 
 

@@ -19,43 +19,42 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
     @Override
     public void ServerStrategy(InputStream inputStream, OutputStream outputStream) {
         try {
+            //initialize the streams input from the client and output to the client
+
             ObjectInputStream fromClient = new ObjectInputStream(inputStream);
             ObjectOutputStream toClient = new ObjectOutputStream(outputStream);
 
             try {
-                String tempDirectoryPath = System.getProperty("java.io.tmpdir");
-                //String tempDirectoryPath = "/Users/malkahanimov/Desktop";
-                System.out.println(tempDirectoryPath);
+                //receive from client maze and search if it has been solved before
                 Maze maze = (Maze)(fromClient.readObject());
-
-                Solution solution=null;
+                //to identify the maze, we get its hashcode and search in the temp dir if there is a solution for this hash code
+                //each solution is save in the temp dir as: solution*hashcode*_uniqueNum
                 int hashMaze = maze.hashCode();
-                String solPath= tempDirectoryPath +"/"+"Solution"+hashMaze;
-                //if(Files.exists(Path.of(SolPath))
+                String tempDirectoryPath = System.getProperty("java.io.tmpdir");
+                String solPath= tempDirectoryPath +"\\"+"Solution"+hashMaze;
+
+                //search for the files with the hashcode of the maze
                 File dir = new File(tempDirectoryPath);
-                // list the files using a anonymous FileFilter
                 File[] files = dir.listFiles(new FileFilter() {
                     @Override
                     public boolean accept(File file) {
                         return file.getName().startsWith("Solution"+hashMaze);
                     }
                 });
-                System.out.println(hashMaze);
                 boolean flag = false;
+                Solution solution=null;
                 if(files.length!=0) {
-                    //file exist, need to compare files with byteArray
-                    System.out.println("len > 0!!!!");
+                    //files with this hashcode exist,then compare with byteArray of the maze that is save inside the files
                     ObjectInputStream inSolution;
                     ArrayList<Object> loadSol;
                     for (File file : files) {
                         inSolution = new ObjectInputStream(new FileInputStream(file));
                         loadSol = (ArrayList<Object>) (inSolution.readObject());
-                        System.out.println(file.getName());
                         byte[] loadMaze = (byte[]) loadSol.get(0);
                         String s1 = Convert(maze.toByteArray());
                         String s2 = Convert(loadMaze);
+                        //if the byte array string of a maze is equal then get the solution saved inside the file
                         if (s1.equals(s2)) {
-                            System.out.println("found!!!!");
                             solution = (Solution) loadSol.get(1);
                             flag = true;
                             inSolution.close();
@@ -63,23 +62,27 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
                         }
                         inSolution.close();
                     }
-
                 }
+                //if there are no files with the hashcode name or non of these files contains the correct maze, search for new solution
                 if(files.length==0 || !flag){
-                    System.out.println("not found!!!!"+flag+" "+files.length);
+                    //create searcher and solvve the maze
                     ISearchingAlgorithm searcher = Configurations.getMazeSearchingAlgorithm();
                     ISearchable searchableMaze = new SearchableMaze(maze);
-                    solution = searcher.solve(searchableMaze); //solving the maze
+                    solution = searcher.solve(searchableMaze);
+                    //creating unique file name
                     solPath = solPath + "_" + counter.getAndIncrement(); //Name OF the file
+                    //creating output stream for the file
                     ObjectOutputStream outSolution = new ObjectOutputStream(new FileOutputStream(solPath));
+                    //array saveObj will contain first the byteArray of maze, then the solution
                     ArrayList<Object> saveObj = new ArrayList<>();
                     saveObj.add(maze.toByteArray());
                     saveObj.add(solution);
+                    //writing to the file
                     outSolution.writeObject(saveObj);
                     outSolution.flush();
                     outSolution.close();
                 }
-
+                //writing solution to the client
                 toClient.writeObject(solution);
                 toClient.flush();
                 fromClient.close();
@@ -93,7 +96,8 @@ public class ServerStrategySolveSearchProblem implements IServerStrategy{
             e.printStackTrace();
         }
     }
-    public String Convert(byte[] byteMaze)
+    //converting bytearray to string
+    private String Convert(byte[] byteMaze)
     {
         String temp="";
 

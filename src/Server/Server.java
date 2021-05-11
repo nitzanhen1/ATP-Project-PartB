@@ -7,8 +7,6 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static java.lang.Thread.sleep;
-
 public class Server {
     private int port;
     private int listeningIntervalMS;
@@ -16,6 +14,12 @@ public class Server {
     private volatile boolean stop;
     private ExecutorService threadPool; // Thread pool
 
+
+    /**
+     * @param port get port to create server socket
+     * @param listeningIntervalMS interval that determine the time in millisecond that the socket will wait to accept clients
+     * @param strategy determine that strategy that the serve will use to serve the clients
+     */
     public Server(int port, int listeningIntervalMS, IServerStrategy strategy) {
         this.port = port;
         this.listeningIntervalMS = listeningIntervalMS;
@@ -26,6 +30,7 @@ public class Server {
     }
 
     public void start(){
+        //sending threads to wait until they receive clients.
         new Thread(() -> {
             runServer();
         }).start();
@@ -37,6 +42,7 @@ public class Server {
 
             while (!stop) {
                 try {
+                    //receiving  all clients, and call handle clients according to the thread pool sizes
                     Socket clientSocket = serverSocket.accept();
 
                     threadPool.submit(() -> {
@@ -56,6 +62,7 @@ public class Server {
 
     private void handleClient(Socket clientSocket) {
         try {
+            //for each client call the strategy requested.
             strategy.ServerStrategy(clientSocket.getInputStream(), clientSocket.getOutputStream());
             clientSocket.close();
         } catch (IOException e){

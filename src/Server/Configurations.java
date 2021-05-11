@@ -10,11 +10,13 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Configurations {
+    //configuration is a singleton class, and is used to change the properties of thread number, generation and solving algorithms
 
     private static Configurations conf = null;
     private static Properties properties ;
     private static final String path=System.getProperty("user.dir")+"/resources/config.properties";
 
+    //private constructor, create only one instance, and loading the last properties the user used
     private Configurations(){
         properties = new Properties();
         try {
@@ -24,20 +26,23 @@ public class Configurations {
         }
     }
 
+    //this func try and call the constructor if it hasn't been called before
+    //else it will return the instance that was created before
     public static Configurations getInstance(){
         if(conf==null)
             conf = new Configurations();
         return conf;
     }
 
-    public static void loadProperties(){
-        String path=System.getProperty("user.dir")+"/resources/config.properties";
-        try {
-            properties.load(new FileInputStream(path));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void loadProperties(){
+//        try {
+//            properties.load(new FileInputStream(path));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    //getters of the 3 properties:
 
     public static int getThreadPoolSize(){
         return Integer.parseInt(properties.getProperty("threadPoolSize"));}
@@ -62,6 +67,8 @@ public class Configurations {
         else
             return (new BestFirstSearch());
     }
+
+    //setters of the 3 properties:
 
     public static void setThreadPoolSize(int numOfTreads){
         properties.setProperty("threadPoolSize",String.valueOf(numOfTreads));

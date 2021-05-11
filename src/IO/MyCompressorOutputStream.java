@@ -17,15 +17,22 @@ public class MyCompressorOutputStream extends OutputStream {
 
     @Override
     public void write(byte[] b) throws IOException {
-        int sizeCompressed = (b.length-12)/8+12;
+        //receive a byteArray representation of a maze and compress it.
+        //each maze will be compressed to 1/8 of it size +12 first cells that determine the sizes and positions
 
+        int sizeCompressed = (b.length-12)/8+12;
         if((b.length-12)%8>0)
             sizeCompressed++;
         byte[] compressedMaze = new byte[sizeCompressed];
 
+        //get the first 12 cells without changes, that represent maze row and col size, start and goal pos
         for(int i=0;i<12;i++)
             compressedMaze[i]=b[i];
 
+        //going through the maze,
+        //from each 8 close cells, that represent an 8 digit binary number convert to decimal number
+        //and saving it as one cell byte number
+        //example: [0,0,0,0,1,1,1,1] => 15 => save (byte)15 inside the array
         int num;
         int index=12;
         int idx=12;
@@ -38,33 +45,13 @@ public class MyCompressorOutputStream extends OutputStream {
             index++;
             idx=idx+8;
         }
-
+        // the main loop transform all of the maze except the last few cell that might not divide by 8
         int rest= b.length-idx-1;
         num = 0;
         for(int i=rest;i>=0;i--){
             num=num+(int)Math.pow(2,rest-i)*b[idx+i];
         }
         compressedMaze[index]=(byte)num;
-
-        /*int index=12;
-        int power;
-        int advance;
-        for(advance=12; advance+8< b.length;advance=advance+8){
-            power = (int)Math.pow(2,7);
-            for(int i=0;i<8;i++) {
-                compressedMaze[index]+= b[i+advance]*power;
-                power=power/2;
-            }
-            index++;
-        }
-
-        int lastIter=b.length-advance-1;
-        power=(int)Math.pow(2,lastIter-1);
-        for(int i=0;i<lastIter;i++){
-            compressedMaze[index]+=b[i+advance]*power;
-        }*/
-
       out.write(compressedMaze);
-
     }
 }

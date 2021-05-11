@@ -14,16 +14,16 @@ public class SimpleDecompressorInputStream extends InputStream {
     }
 
     @Override
-    public int read() throws IOException {
-        return in.read();
-    }
+    public int read() throws IOException {return in.read();}
 
     @Override
     public int read(byte[] b) throws IOException {
-
+        //receive a compressed maze, each cell represent sequence of 1 or 0 in the original maze
+        //except the first 12 that represent the maze sizes and position
         for(int i=0;i<12;i++)
             b[i]=(byte)in.read();
 
+        //transform each cell of received bytearray to an equal amount of cells in the bytearray to send to client
         int num;
         int idx=12;
         boolean flag=false;
@@ -39,8 +39,6 @@ public class SimpleDecompressorInputStream extends InputStream {
             }
             flag=!flag;
         }
-
-
         return 0;
     }
 }
